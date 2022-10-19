@@ -17,7 +17,7 @@ function App() {
   useEffect(() => {
     if (timerFlag) {
       var interval = setInterval(() => {
-        if (currentFrame === totalFrame + frequency) setCurrentFrame(0)
+        if (currentFrame + frequency >= totalFrame) setCurrentFrame(0)
         else setCurrentFrame(currentFrame + frequency)
       }, (1000 / fps));
     }
