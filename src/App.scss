@@ -35,7 +35,9 @@
     }
 
     .buttons {
+        width: fit-content;
         display: flex;
+        margin: auto;
     }
 
     .button {
@@ -57,9 +59,22 @@
         padding: 10px 0px 10px 0px;
     }
 
+    .sliders {
+        display: flex;
+        padding: 30px 0px 30px 0px;
+        p{
+            margin: auto;
+        }
+        .slider-box{
+            width: 400px;
+            padding: 0px 30px 0px 30px;
+        }
+    }
     .go-to-frame {
         display: flex;
         padding: 10px 0px 10px 0px;
+        width: fit-content;
+        margin: auto;
 
         p {
             margin: 0px;
