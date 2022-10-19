@@ -7,7 +7,7 @@ function App() {
   const cellB = [0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0]
   const cellD = [0, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 1, 1, 0]
   const cellC = [0, 0, 0, 1, 0, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0]
-  const unitNumber = 3
+  const unitNumber = 4
   const totalFrame = Math.pow(16, unitNumber * unitNumber);
   const [currentFrame, setCurrentFrame] = useState(0)
   const [timerFlag, setTimerFlag] = useState(false)
@@ -38,14 +38,14 @@ function App() {
         tempCurrentFrame = currentFrame + Math.ceil(totalFrame / 1000)
         if (tempCurrentFrame >= totalFrame) setCurrentFrame(0)
         else setCurrentFrame(tempCurrentFrame)
-      }, 1)
+      }, 10)
     }
     else if (backwardFlag) {
       timer = setTimeout(() => {
         tempCurrentFrame = currentFrame - Math.ceil(totalFrame / 1000)
         if (tempCurrentFrame <= 0) setCurrentFrame(totalFrame)
         else setCurrentFrame(tempCurrentFrame)
-      }, 1)
+      }, 10)
     }
     else clearTimeout(timer)
     return () => clearTimeout(timer)
