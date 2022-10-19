@@ -14,6 +14,8 @@ function App() {
   const [inputValue, setInputValue] = useState(1)
   const [fps, setFps] = useState(100)
   const [frequency, setFrequency] = useState(1)
+  const [forwardFlag, setForwardFlag] = useState(false)
+  const [backwardFlag, setBackwardFlag] = useState(false)
   useEffect(() => {
     if (timerFlag) {
       var interval = setInterval(() => {
@@ -26,6 +28,27 @@ function App() {
       clearInterval(interval);
     };
   }, [currentFrame, timerFlag, totalFrame, fps, frequency]);
+
+  console.log(forwardFlag, backwardFlag)
+  useEffect(() => {
+    if (forwardFlag) {
+      var timer = setTimeout(() => {
+        var tempCurrentFrame = currentFrame + Math.ceil(totalFrame / 1000)
+        if (tempCurrentFrame >= totalFrame) setCurrentFrame(0)
+        else setCurrentFrame(tempCurrentFrame)
+      }, 1)
+    }
+    else if (backwardFlag) {
+      var timer = setTimeout(() => {
+        var tempCurrentFrame = currentFrame - Math.ceil(totalFrame / 1000)
+        if (tempCurrentFrame <= 0) setCurrentFrame(totalFrame)
+        else setCurrentFrame(tempCurrentFrame)
+      }, 1)
+    }
+    else clearTimeout(timer)
+    return () => clearTimeout(timer)
+  })
+
   return (
     <div className="App">
       <div className='squares'>
@@ -67,27 +90,37 @@ function App() {
         <div className='button' onClick={() => { setCurrentFrame(0); }}>Reset</div>
       </div>
       <div className='current-frame'>Total Frame : {totalFrame}</div>
-      <div className='current-frame'>Current Frame : {currentFrame + 1}</div>
       <div className='sliders'>
         <div className='slider-box'>
           <Slider valueLabelDisplay="auto" value={fps} onChange={(e) => { setFps(e.target.value) }} step={1} min={1} max={1000} />
-          <p>Speed FPS : {fps}</p>
+          <div className='row'>
+            <p>Speed FPS : </p>
+            <input type={'number'} min={1} max={1000} value={fps} onChange={(e) => { setFps(e.target.value) }} />
+          </div>
         </div>
         <div className='slider-box'>
-          <Slider valueLabelDisplay="auto" value={frequency} onChange={(e) => { setFrequency(e.target.value) }} step={1} min={1} max={1000000000} />
-          <p>Frequency : {frequency}</p>
+          <Slider valueLabelDisplay="auto" value={frequency} onChange={(e) => { setFrequency(e.target.value) }} step={1} min={1} max={1000} />
+          <div className='row'>
+            <p>Frequency : </p>
+            <input type={'number'} min={1} max={1000} value={frequency} onChange={(e) => { setFrequency(e.target.value) }} />
+          </div>
         </div>
       </div>
       <div className='go-to-frame'>
         <p>Go To Frame</p>
-        <input type={'number'} max={totalFrame} value={inputValue} onChange={(e) => { setInputValue(e.target.value) }} />
+        <input type={'number'} min={1} max={totalFrame} value={inputValue} onChange={(e) => { setInputValue(e.target.value) }} />
         <div className='button' onClick={() => { setCurrentFrame(parseInt(inputValue - 1)) }}>Go</div>
       </div>
       <div className='slider'>
+        <div className='button' onMouseDown={() => setBackwardFlag(true)}
+          onMouseLeave={() => setBackwardFlag(false)} onMouseUp={() => setBackwardFlag(false)}>{'<<<'}</div>
         <Slider valueLabelDisplay="auto" value={currentFrame + 1} onChange={(e) => {
           setCurrentFrame(e.target.value)
         }} step={1} min={1} max={totalFrame} />
+        <div className='button' onMouseDown={() => setForwardFlag(true)}
+          onMouseLeave={() => setForwardFlag(false)} onMouseUp={() => setForwardFlag(false)}>{'>>>'}</div>
       </div>
+      <div className='current-frame'>Current Frame : {currentFrame + 1}</div>
       <div className='reset-all'>
         <div className='button' onClick={() => {
           setCurrentFrame(0);
