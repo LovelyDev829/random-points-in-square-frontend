@@ -23,7 +23,7 @@ function App() {
     return () => {
       clearInterval(interval);
     };
-  }, [currentFrame, timerFlag]);
+  }, [currentFrame, timerFlag, totalFrame]);
   return (
     <div className="App">
       <div className='squares'>
