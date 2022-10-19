@@ -17,8 +17,9 @@ function App() {
   const [forwardFlag, setForwardFlag] = useState(false)
   const [backwardFlag, setBackwardFlag] = useState(false)
   useEffect(() => {
+    var interval
     if (timerFlag) {
-      var interval = setInterval(() => {
+      interval = setInterval(() => {
         if (currentFrame + frequency >= totalFrame) setCurrentFrame(0)
         else setCurrentFrame(currentFrame + frequency)
       }, (1000 / fps));
@@ -31,16 +32,17 @@ function App() {
 
   console.log(forwardFlag, backwardFlag)
   useEffect(() => {
+    var timer, tempCurrentFrame
     if (forwardFlag) {
-      var timer = setTimeout(() => {
-        var tempCurrentFrame = currentFrame + Math.ceil(totalFrame / 1000)
+      timer = setTimeout(() => {
+        tempCurrentFrame = currentFrame + Math.ceil(totalFrame / 1000)
         if (tempCurrentFrame >= totalFrame) setCurrentFrame(0)
         else setCurrentFrame(tempCurrentFrame)
       }, 1)
     }
     else if (backwardFlag) {
-      var timer = setTimeout(() => {
-        var tempCurrentFrame = currentFrame - Math.ceil(totalFrame / 1000)
+      timer = setTimeout(() => {
+        tempCurrentFrame = currentFrame - Math.ceil(totalFrame / 1000)
         if (tempCurrentFrame <= 0) setCurrentFrame(totalFrame)
         else setCurrentFrame(tempCurrentFrame)
       }, 1)
