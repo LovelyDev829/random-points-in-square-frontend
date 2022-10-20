@@ -20,15 +20,13 @@ function App() {
   const [backwardFlag, setBackwardFlag] = useState(false)
   const [stepForwardFlag, setStepForwardFlag] = useState(false)
   const [stepBackwardFlag, setStepBackwardFlag] = useState(false)
-  const [frameSliderValue, setFrameSliderValue] = useState(1)
-  const [frequencySliderValue, setFrequencySliderValue] = useState(1)
 
   useEffect(() => {
     var interval
     if (timerFlag) {
       interval = setInterval(() => {
         // console.log(currentFrame.plus(frequency), totalFrame, currentFrame.comparedTo(totalFrame))
-        if (currentFrame.comparedTo(totalFrame) === 1) setCurrentFrame(new BigNumber(0))
+        if (currentFrame.plus(frequency).comparedTo(totalFrame) === 1) setCurrentFrame(currentFrame.plus(frequency).minus(totalFrame))
         else setCurrentFrame(currentFrame.plus(frequency))
       }, (1000 / fps));
     }
@@ -127,13 +125,12 @@ function App() {
           </div>
         </div>
         <div className='slider-box'>
-          <Slider value={frequencySliderValue} onChange={(e) => {
+          <Slider value={parseInt(frequency.dividedBy(totalFrame).multipliedBy(MAX_NUM).toFixed())} onChange={(e) => {
             setFrequency(totalFrame.dividedBy(MAX_NUM - 1).multipliedBy(e.target.value - 1).plus(1).integerValue(BigNumber.ROUND_FLOOR))
-            setFrequencySliderValue(e.target.value)
           }} step={1} min={1} max={MAX_NUM} />
           <div className='row'>
             <p>Frequency : </p>
-            <input type={'number'} min={1} max={totalFrame.toFixed()} value={frequency} onChange={(e) => { setFrequency(e.target.value) }} />
+            <input type={'text'} value={frequency.toFixed()} onChange={(e) => { setFrequency(new BigNumber(e.target.value)) }} />
           </div>
         </div>
       </div>
@@ -153,10 +150,8 @@ function App() {
             else setCurrentFrame(tempCurrentFrame)
           }}>{'<'}</div>
 
-        <Slider step={1} min={1} max={MAX_NUM} value={frameSliderValue} onChange={(e) => {
-          setCurrentFrame(totalFrame.dividedBy(MAX_NUM - 1).multipliedBy(e.target.value - 1).integerValue(BigNumber.ROUND_FLOOR))
-          setFrameSliderValue(e.target.value)
-        }} />
+        <Slider step={1} min={1} max={MAX_NUM} value={parseInt(currentFrame.dividedBy(totalFrame).multipliedBy(MAX_NUM).toFixed())} onChange={(e) => {
+          setCurrentFrame(totalFrame.dividedBy(MAX_NUM - 1).multipliedBy(e.target.value - 1).integerValue(BigNumber.ROUND_FLOOR)) }} />
 
         <div className='button right' onMouseDown={() => setStepForwardFlag(true)}
           onMouseLeave={() => setStepForwardFlag(false)} onMouseUp={() => setStepForwardFlag(false)}
