@@ -7,7 +7,7 @@ function App() {
   const cellB = [0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0]
   const cellD = [0, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 1, 1, 0]
   const cellC = [0, 0, 0, 1, 0, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0]
-  const unitNumber = 4
+  const unitNumber = 3
   const totalFrame = Math.pow(16, unitNumber * unitNumber);
   const [currentFrame, setCurrentFrame] = useState(0)
   const [timerFlag, setTimerFlag] = useState(false)
@@ -16,6 +16,8 @@ function App() {
   const [frequency, setFrequency] = useState(1)
   const [forwardFlag, setForwardFlag] = useState(false)
   const [backwardFlag, setBackwardFlag] = useState(false)
+  const [stepForwardFlag, setStepForwardFlag] = useState(false)
+  const [stepBackwardFlag, setStepBackwardFlag] = useState(false)
   useEffect(() => {
     var interval
     if (timerFlag) {
@@ -46,6 +48,25 @@ function App() {
         if (tempCurrentFrame <= 0) setCurrentFrame(totalFrame)
         else setCurrentFrame(tempCurrentFrame)
       }, 10)
+    }
+    else clearTimeout(timer)
+    return () => clearTimeout(timer)
+  })
+  useEffect(() => {
+    var timer, tempCurrentFrame
+    if (stepForwardFlag) {
+      timer = setTimeout(() => {
+        tempCurrentFrame = currentFrame + 1
+        if (tempCurrentFrame >= totalFrame) setCurrentFrame(0)
+        else setCurrentFrame(tempCurrentFrame)
+      }, 100)
+    }
+    else if (stepBackwardFlag) {
+      timer = setTimeout(() => {
+        tempCurrentFrame = currentFrame - 1
+        if (tempCurrentFrame <= 0) setCurrentFrame(totalFrame)
+        else setCurrentFrame(tempCurrentFrame)
+      }, 100)
     }
     else clearTimeout(timer)
     return () => clearTimeout(timer)
@@ -116,9 +137,25 @@ function App() {
       <div className='slider'>
         <div className='button' onMouseDown={() => setBackwardFlag(true)}
           onMouseLeave={() => setBackwardFlag(false)} onMouseUp={() => setBackwardFlag(false)}>{'<<<'}</div>
+        <div className='button left' onMouseDown={() => setStepBackwardFlag(true)}
+          onMouseLeave={() => setStepBackwardFlag(false)} onMouseUp={() => setStepBackwardFlag(false)}
+          onClick={() => {
+            var tempCurrentFrame = currentFrame - 1
+            if (tempCurrentFrame <= 0) setCurrentFrame(totalFrame)
+            else setCurrentFrame(tempCurrentFrame)
+          }}>{'<'}</div>
+
         <Slider valueLabelDisplay="auto" value={currentFrame + 1} onChange={(e) => {
           setCurrentFrame(e.target.value)
         }} step={1} min={1} max={totalFrame} />
+
+        <div className='button right' onMouseDown={() => setStepForwardFlag(true)}
+          onMouseLeave={() => setStepForwardFlag(false)} onMouseUp={() => setStepForwardFlag(false)}
+          onClick={() => {
+            var tempCurrentFrame = currentFrame + 1
+            if (tempCurrentFrame >= totalFrame) setCurrentFrame(0)
+            else setCurrentFrame(tempCurrentFrame)
+          }}>{'>'}</div>
         <div className='button' onMouseDown={() => setForwardFlag(true)}
           onMouseLeave={() => setForwardFlag(false)} onMouseUp={() => setForwardFlag(false)}>{'>>>'}</div>
       </div>
