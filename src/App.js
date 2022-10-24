@@ -12,7 +12,6 @@ function App() {
   const unitNumber = 4
   const totalFrame = new BigNumber(16).pow(unitNumber * unitNumber);
   const [currentFrame, setCurrentFrame] = useState(new BigNumber(0))
-  // const [displayingCurrentFrame, setDisplayingCurrentFrame] = useState(new BigNumber(0))
   const [timerFlag, setTimerFlag] = useState(false)
   const [inputValue, setInputValue] = useState('1')
   const [fps, setFps] = useState(50)
@@ -27,10 +26,16 @@ function App() {
     var interval
     if (timerFlag) {
       interval = setInterval(() => {
-        // console.log(currentFrame.plus(frequency), totalFrame, currentFrame.comparedTo(totalFrame))
-        if (currentFrame.plus(frequency).comparedTo(totalFrame) === 1) setCurrentFrame(currentFrame.plus(frequency).minus(totalFrame))
-        else setCurrentFrame(currentFrame.plus(frequency))
-      }, (1000 / fps));
+        var times = (fps / shutterFps).toFixed()
+        console.log("times", times)
+        var tempCurrentFrame = currentFrame
+        while (times--) {
+          console.log("times--", times)
+          if (tempCurrentFrame.plus(frequency).comparedTo(totalFrame) === 1) tempCurrentFrame = tempCurrentFrame.plus(frequency).minus(totalFrame)
+          else tempCurrentFrame = tempCurrentFrame.plus(frequency)
+        }
+        setCurrentFrame(tempCurrentFrame)
+      }, (1000 / shutterFps));
     }
     else clearInterval(interval);
     return () => {
@@ -113,7 +118,7 @@ function App() {
       </div>
       <div className='buttons'>
         <div className='button' onClick={() => { setTimerFlag(true) }}>Start</div>
-        <div className='button' onClick={() => { setTimerFlag(false) }}>Stop</div>
+        <div className='button' onClick={() => { setTimerFlag(false) }}>Pause</div>
         <div className='button' onClick={() => { setCurrentFrame(new BigNumber(0)); }}>Reset</div>
       </div>
       <div className='current-frame'>Total Frame : {totalFrame.toFixed()}</div>
