@@ -41,7 +41,7 @@ function App() {
     return () => {
       clearInterval(interval);
     };
-  }, [currentFrame, timerFlag, totalFrame, fps, frequency]);
+  }, [currentFrame, timerFlag, totalFrame, fps, shutterFps, frequency]);
 
   useEffect(() => {
     var timer, tempCurrentFrame
