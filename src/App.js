@@ -12,7 +12,7 @@ function App() {
   const unitNumber = 4
   const totalFrame = new BigNumber(16).pow(unitNumber * unitNumber);
   const [currentFrame, setCurrentFrame] = useState(new BigNumber(0))
-  const [displayingCurrentFrame, setDisplayingCurrentFrame] = useState(new BigNumber(0))
+  // const [displayingCurrentFrame, setDisplayingCurrentFrame] = useState(new BigNumber(0))
   const [timerFlag, setTimerFlag] = useState(false)
   const [inputValue, setInputValue] = useState('1')
   const [fps, setFps] = useState(50)
