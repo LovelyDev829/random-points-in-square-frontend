@@ -84,6 +84,7 @@ function App() {
   return (
     <div className={drawFlag ? 'App curser' : 'App'}>
       <div className={drawFlag ? 'button draw-mode' : 'button draw-mode disabled'} onClick={() => setDrawFlag(!drawFlag)}>DRAW MODE</div>
+      <div className='button clear' onClick={()=>{setCurrentFrame(totalFrame.minus(1))}}>CLEAR</div>
       <div className='squares'>
         {
           [...Array(unitNumber)].map((item, firstIndex) => {
@@ -177,7 +178,7 @@ function App() {
           }}>{'<'}</div>
 
         <Slider step={1} min={1} max={MAX_NUM} value={parseInt(currentFrame.dividedBy(totalFrame).multipliedBy(MAX_NUM).toFixed())} onChange={(e) => {
-          setCurrentFrame(totalFrame.dividedBy(MAX_NUM - 1).multipliedBy(e.target.value - 1).integerValue(BigNumber.ROUND_FLOOR))
+          setCurrentFrame(totalFrame.dividedBy(MAX_NUM-1).multipliedBy(e.target.value - 1).integerValue(BigNumber.ROUND_FLOOR))
         }} />
 
         <div className='button right' onMouseDown={() => setStepForwardFlag(true)}
