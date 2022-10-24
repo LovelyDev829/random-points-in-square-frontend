@@ -12,9 +12,11 @@ function App() {
   const unitNumber = 4
   const totalFrame = new BigNumber(16).pow(unitNumber * unitNumber);
   const [currentFrame, setCurrentFrame] = useState(new BigNumber(0))
+  const [displayingCurrentFrame, setDisplayingCurrentFrame] = useState(new BigNumber(0))
   const [timerFlag, setTimerFlag] = useState(false)
   const [inputValue, setInputValue] = useState('1')
-  const [fps, setFps] = useState(100)
+  const [fps, setFps] = useState(50)
+  const [shutterFps, setShutterFps] = useState(50)
   const [frequency, setFrequency] = useState(new BigNumber(1))
   const [forwardFlag, setForwardFlag] = useState(false)
   const [backwardFlag, setBackwardFlag] = useState(false)
@@ -35,24 +37,23 @@ function App() {
       clearInterval(interval);
     };
   }, [currentFrame, timerFlag, totalFrame, fps, frequency]);
-  // console.log(currentFrame)
+
   useEffect(() => {
     var timer, tempCurrentFrame
     // console.log(currentFrame)
     if (forwardFlag) {
       timer = setTimeout(() => {
-        tempCurrentFrame = currentFrame.plus(totalFrame.dividedBy(1000).integerValue(BigNumber.ROUND_CEIL))
-        console.log(tempCurrentFrame.toFixed())
-        if (tempCurrentFrame.comparedTo(totalFrame) === 1) setCurrentFrame(new BigNumber(0))
+        tempCurrentFrame = currentFrame.plus(frequency)
+        if (tempCurrentFrame.comparedTo(totalFrame) === 1) setCurrentFrame(tempCurrentFrame.minus(totalFrame))
         else setCurrentFrame(tempCurrentFrame)
-      }, 10)
+      }, 100)
     }
     else if (backwardFlag) {
       timer = setTimeout(() => {
-        tempCurrentFrame = currentFrame.minus(totalFrame.dividedBy(1000).integerValue(BigNumber.ROUND_CEIL))
-        if (tempCurrentFrame.comparedTo(0) === -1) setCurrentFrame(totalFrame)
+        tempCurrentFrame = currentFrame.minus(frequency)
+        if (tempCurrentFrame.comparedTo(0) === -1) setCurrentFrame(tempCurrentFrame.plus(totalFrame))
         else setCurrentFrame(tempCurrentFrame)
-      }, 10)
+      }, 100)
     }
     else clearTimeout(timer)
     return () => clearTimeout(timer)
@@ -89,7 +90,7 @@ function App() {
 
                     const currentCell = (unitNumber * unitNumber) - parseInt(firstIndex.toString() + secondIndex.toString(), unitNumber)
                     const sixteenNumber = currentFrame.toString(16)
-                    console.log(currentFrame.toFixed(), sixteenNumber)
+                    // console.log(currentFrame.toFixed(), sixteenNumber)
                     const index = parseInt(sixteenNumber[sixteenNumber.length - currentCell], 16) || 0
                     return (
                       <div className='unit-squares' key={"first" + secondIndex}>
@@ -118,10 +119,17 @@ function App() {
       <div className='current-frame'>Total Frame : {totalFrame.toFixed()}</div>
       <div className='sliders'>
         <div className='slider-box'>
-          <Slider value={fps} onChange={(e) => { setFps(e.target.value) }} step={1} min={1} max={1000} />
+          <Slider value={fps} onChange={(e) => { setFps(e.target.value) }} step={1} min={1} max={120} />
           <div className='row'>
-            <p>Speed FPS : </p>
-            <input type={'number'} min={1} max={1000} value={fps} onChange={(e) => { setFps(e.target.value) }} />
+            <p>Frame Speed FPS : </p>
+            <input type={'number'} min={1} max={120} value={fps} onChange={(e) => { setFps(e.target.value) }} />
+          </div>
+        </div>
+        <div className='slider-box'>
+          <Slider value={shutterFps} onChange={(e) => { setShutterFps(e.target.value) }} step={1} min={1} max={120} />
+          <div className='row'>
+            <p>Shutter Speed FPS : </p>
+            <input type={'number'} min={1} max={120} value={shutterFps} onChange={(e) => { setShutterFps(e.target.value) }} />
           </div>
         </div>
         <div className='slider-box'>
@@ -130,7 +138,7 @@ function App() {
           }} step={1} min={1} max={MAX_NUM} />
           <div className='row'>
             <p>Frequency : </p>
-            <input type={'text'} value={frequency.toFixed()} onChange={(e) => { setFrequency(new BigNumber(e.target.value)) }} />
+            <input className='long' type={'text'} value={frequency.toFixed()} onChange={(e) => { setFrequency(new BigNumber(e.target.value)) }} />
           </div>
         </div>
       </div>
@@ -140,8 +148,13 @@ function App() {
         <div className='button' onClick={() => { setCurrentFrame(new BigNumber(inputValue).minus(1)) }}>Go</div>
       </div>
       <div className='slider'>
-        <div className='button' onMouseDown={() => setBackwardFlag(true)}
+        <div className='button' onMouseDown={() => setBackwardFlag(true)} onClick={() => {
+          var tempCurrentFrame = currentFrame.minus(frequency)
+          if (tempCurrentFrame.comparedTo(0) === -1) setCurrentFrame(tempCurrentFrame.plus(totalFrame))
+          else setCurrentFrame(tempCurrentFrame)
+        }}
           onMouseLeave={() => setBackwardFlag(false)} onMouseUp={() => setBackwardFlag(false)}>{'<<<'}</div>
+
         <div className='button left' onMouseDown={() => setStepBackwardFlag(true)}
           onMouseLeave={() => setStepBackwardFlag(false)} onMouseUp={() => setStepBackwardFlag(false)}
           onClick={() => {
@@ -151,7 +164,8 @@ function App() {
           }}>{'<'}</div>
 
         <Slider step={1} min={1} max={MAX_NUM} value={parseInt(currentFrame.dividedBy(totalFrame).multipliedBy(MAX_NUM).toFixed())} onChange={(e) => {
-          setCurrentFrame(totalFrame.dividedBy(MAX_NUM - 1).multipliedBy(e.target.value - 1).integerValue(BigNumber.ROUND_FLOOR)) }} />
+          setCurrentFrame(totalFrame.dividedBy(MAX_NUM - 1).multipliedBy(e.target.value - 1).integerValue(BigNumber.ROUND_FLOOR))
+        }} />
 
         <div className='button right' onMouseDown={() => setStepForwardFlag(true)}
           onMouseLeave={() => setStepForwardFlag(false)} onMouseUp={() => setStepForwardFlag(false)}
@@ -160,7 +174,12 @@ function App() {
             if (tempCurrentFrame.comparedTo(totalFrame) === 1) setCurrentFrame(new BigNumber(0))
             else setCurrentFrame(tempCurrentFrame)
           }}>{'>'}</div>
-        <div className='button' onMouseDown={() => setForwardFlag(true)}
+
+        <div className='button' onMouseDown={() => setForwardFlag(true)} onClick={() => {
+          var tempCurrentFrame = currentFrame.plus(frequency)
+          if (tempCurrentFrame.comparedTo(totalFrame) === 1) setCurrentFrame(tempCurrentFrame.minus(totalFrame))
+          else setCurrentFrame(tempCurrentFrame)
+        }}
           onMouseLeave={() => setForwardFlag(false)} onMouseUp={() => setForwardFlag(false)}>{'>>>'}</div>
       </div>
       <div className='current-frame'>Current Frame : {currentFrame.plus(1).toFixed()}</div>

@@ -77,8 +77,11 @@
             input {
                 margin: 0px 10px 0px 10px;
                 font-size: 30px;
-                width: 400px;
+                width: 80px;
                 padding: 5px 10px 5px 10px;
+                &.long {
+                    min-width: 340px;
+                }
             }
 
         }
