@@ -124,17 +124,33 @@ function App() {
       <div className='current-frame'>Total Frame : {totalFrame.toFixed()}</div>
       <div className='sliders'>
         <div className='slider-box'>
-          <Slider value={fps} onChange={(e) => { setFps(e.target.value) }} step={1} min={1} max={120} />
+          <Slider value={fps} onChange={(e) => {
+            var tempValue = e.target.value
+            setFps(tempValue)
+            if (tempValue < shutterFps) setShutterFps(tempValue)
+          }} step={1} min={1} max={120} />
           <div className='row'>
             <p>Frame Speed FPS : </p>
-            <input type={'number'} min={1} max={120} value={fps} onChange={(e) => { setFps(e.target.value) }} />
+            <input type={'number'} min={1} max={120} value={fps} onChange={(e) => {
+              var tempValue = e.target.value
+              setFps(tempValue)
+              if (tempValue < shutterFps) setShutterFps(tempValue)
+            }} />
           </div>
         </div>
         <div className='slider-box'>
-          <Slider value={shutterFps} onChange={(e) => { setShutterFps(e.target.value) }} step={1} min={1} max={120} />
+          <Slider value={shutterFps} onChange={(e) => {
+            var tempValue = e.target.value
+            setShutterFps(tempValue)
+            if (tempValue > fps) setFps(tempValue)
+          }} step={1} min={1} max={120} />
           <div className='row'>
             <p>Shutter Speed FPS : </p>
-            <input type={'number'} min={1} max={120} value={shutterFps} onChange={(e) => { setShutterFps(e.target.value) }} />
+            <input type={'number'} min={1} max={120} value={shutterFps} onChange={(e) => {
+              var tempValue = e.target.value
+              setShutterFps(tempValue)
+              if (tempValue > fps) setFps(tempValue)
+            }} />
           </div>
         </div>
         <div className='slider-box'>
