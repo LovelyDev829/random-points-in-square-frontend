@@ -234,7 +234,7 @@ function App() {
           </div>
         </div>
         <div className='slider-box'>
-          <Slider value={parseInt(frequency.dividedBy(totalFrame).multipliedBy(MAX_NUM).toFixed())} onChange={(e) => {
+          <Slider value={parseInt(frequency?.dividedBy(totalFrame).multipliedBy(MAX_NUM).toFixed()) || 0} onChange={(e) => {
             setFrequency(totalFrame.dividedBy(MAX_NUM - 1).multipliedBy(e.target.value - 1).plus(1).integerValue(BigNumber.ROUND_FLOOR))
           }} step={1} min={1} max={MAX_NUM} />
           <div className='row'>
@@ -249,7 +249,7 @@ function App() {
           setInputValue(0);
           setTimerFlag(false);
           setFps(100)
-          setFrequency(1)
+          setFrequency(new BigNumber(1))
         }}>Reset All</div>
       </div>
     </div>
