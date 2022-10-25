@@ -9,7 +9,7 @@ function App() {
   const cellB = [0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0]
   const cellD = [0, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 1, 1, 0]
   const cellC = [0, 0, 0, 1, 0, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0]
-  const unitNumber = 4
+  const unitNumber = 10
   const totalFrame = new BigNumber(16).pow(unitNumber * unitNumber);
   const [currentFrame, setCurrentFrame] = useState(new BigNumber(0))
   const [timerFlag, setTimerFlag] = useState(false)
