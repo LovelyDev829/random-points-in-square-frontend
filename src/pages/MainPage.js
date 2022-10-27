@@ -127,9 +127,13 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl, adm
                                                     <div className={cellA[index] === 1 ? 'square black' : 'square'} onClick={() => {
                                                         if (!drawFlag) return;
                                                         [...Array(unitNumber * unitNumber)].forEach((item, tempIndex) => {
+
                                                             if (cellA[index] !== cellA[tempIndex] && cellB[index] === cellB[tempIndex] && cellC[index] === cellC[tempIndex] && cellD[index] === cellD[tempIndex]) {
-                                                                const chIndex = sixteenNumber.length - currentCell
-                                                                const newSixteenNumber = sixteenNumber.substring(0, chIndex) + tempIndex.toString(16) + sixteenNumber.substring(chIndex + 1)
+                                                                const chIndex = (unitNumber * unitNumber) - currentCell
+                                                                var newSixteenNumber = sixteenNumber;
+                                                                const round = (unitNumber * unitNumber)-sixteenNumber.length;
+                                                                [...Array(round)].forEach(()=>{ newSixteenNumber = '0'+newSixteenNumber })
+                                                                newSixteenNumber = newSixteenNumber.substring(0, chIndex) + tempIndex.toString(16) + newSixteenNumber.substring(chIndex + 1)
                                                                 const newCurrentFrame = new BigNumber(newSixteenNumber, 16)
                                                                 setCurrentFrame(newCurrentFrame)
                                                             }
@@ -139,8 +143,11 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl, adm
                                                         if (!drawFlag) return;
                                                         [...Array(unitNumber * unitNumber)].forEach((item, tempIndex) => {
                                                             if (cellA[index] === cellA[tempIndex] && cellB[index] !== cellB[tempIndex] && cellC[index] === cellC[tempIndex] && cellD[index] === cellD[tempIndex]) {
-                                                                const chIndex = sixteenNumber.length - currentCell
-                                                                const newSixteenNumber = sixteenNumber.substring(0, chIndex) + tempIndex.toString(16) + sixteenNumber.substring(chIndex + 1)
+                                                                const chIndex = (unitNumber * unitNumber) - currentCell
+                                                                var newSixteenNumber = sixteenNumber;
+                                                                const round = (unitNumber * unitNumber)-sixteenNumber.length;
+                                                                [...Array(round)].forEach(()=>{ newSixteenNumber = '0'+newSixteenNumber })
+                                                                newSixteenNumber = newSixteenNumber.substring(0, chIndex) + tempIndex.toString(16) + newSixteenNumber.substring(chIndex + 1)
                                                                 const newCurrentFrame = new BigNumber(newSixteenNumber, 16)
                                                                 setCurrentFrame(newCurrentFrame)
                                                             }
@@ -152,8 +159,11 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl, adm
                                                         if (!drawFlag) return;
                                                         [...Array(unitNumber * unitNumber)].forEach((item, tempIndex) => {
                                                             if (cellA[index] === cellA[tempIndex] && cellB[index] === cellB[tempIndex] && cellC[index] !== cellC[tempIndex] && cellD[index] === cellD[tempIndex]) {
-                                                                const chIndex = sixteenNumber.length - currentCell
-                                                                const newSixteenNumber = sixteenNumber.substring(0, chIndex) + tempIndex.toString(16) + sixteenNumber.substring(chIndex + 1)
+                                                                const chIndex = (unitNumber * unitNumber) - currentCell
+                                                                var newSixteenNumber = sixteenNumber;
+                                                                const round = (unitNumber * unitNumber)-sixteenNumber.length;
+                                                                [...Array(round)].forEach(()=>{ newSixteenNumber = '0'+newSixteenNumber })
+                                                                newSixteenNumber = newSixteenNumber.substring(0, chIndex) + tempIndex.toString(16) + newSixteenNumber.substring(chIndex + 1)
                                                                 const newCurrentFrame = new BigNumber(newSixteenNumber, 16)
                                                                 setCurrentFrame(newCurrentFrame)
                                                             }
@@ -163,8 +173,11 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl, adm
                                                         if (!drawFlag) return;
                                                         [...Array(unitNumber * unitNumber)].forEach((item, tempIndex) => {
                                                             if (cellA[index] === cellA[tempIndex] && cellB[index] === cellB[tempIndex] && cellC[index] === cellC[tempIndex] && cellD[index] !== cellD[tempIndex]) {
-                                                                const chIndex = sixteenNumber.length - currentCell
-                                                                const newSixteenNumber = sixteenNumber.substring(0, chIndex) + tempIndex.toString(16) + sixteenNumber.substring(chIndex + 1)
+                                                                const chIndex = (unitNumber * unitNumber) - currentCell
+                                                                var newSixteenNumber = sixteenNumber;
+                                                                const round = (unitNumber * unitNumber)-sixteenNumber.length;
+                                                                [...Array(round)].forEach(()=>{ newSixteenNumber = '0'+newSixteenNumber })
+                                                                newSixteenNumber = newSixteenNumber.substring(0, chIndex) + tempIndex.toString(16) + newSixteenNumber.substring(chIndex + 1)
                                                                 const newCurrentFrame = new BigNumber(newSixteenNumber, 16)
                                                                 setCurrentFrame(newCurrentFrame)
                                                             }
@@ -291,7 +304,6 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl, adm
                         var today = new Date()
                         var date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
                         var time = today.getHours() + ':' + today.getMinutes() + ':' + today.getSeconds();
-                        // console.log(date, time)
                         const frameObject = {
                             frame: currentFrame.toString(),
                             comment: comment,
@@ -302,7 +314,6 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl, adm
                             shutterFps: shutterFps,
                             frequency: frequency.toString()
                         };
-                        // console.log(frameObject)
                         axios.post(baseUrl + '/frame/create-frame', frameObject)
                             .then(res => {
                                 if (res.data?.success) {
@@ -367,7 +378,6 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl, adm
                                         setFrequency(new BigNumber(savedItem?.frequency))
                                     }}>Try it</div>
                                     <div className={adminFlag ? 'button' : 'hidden'} onClick={() => {
-                                        // console.log(savedItem._id)
                                         axios.delete(baseUrl + '/frame/delete-frame/' + savedItem._id)
                                             .then(res => {
                                                 if (res.data?.success) { }
