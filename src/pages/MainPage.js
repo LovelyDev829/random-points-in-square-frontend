@@ -55,7 +55,7 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl, adm
         return () => {
             clearInterval(interval);
         };
-    }, [currentFrame, timerFlag, totalFrame, fps, shutterFps, frequency, savedData]);
+    }, [currentFrame, timerFlag, totalFrame, fps, shutterFps, frequency, savedData, baseUrl]);
     useEffect(() => {
         var timer, tempCurrentFrame
         if (forwardFlag) {
