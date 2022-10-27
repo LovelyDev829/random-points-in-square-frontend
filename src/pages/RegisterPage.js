@@ -6,6 +6,7 @@ function RegisterPage({baseUrl, setUserInfo, setLoginFlag}) {
     const navigate = useNavigate();
     const [firstName, setFirstName] = useState('')
     const [lastName, setLastName] = useState('')
+    const [userName, setUserName] = useState('')
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     return (
@@ -25,6 +26,12 @@ function RegisterPage({baseUrl, setUserInfo, setLoginFlag}) {
                     </div>
                 </div>
                 <div className='input-item'>
+                    <p>User Name</p>
+                    <div className='input-box'>
+                        <input type={"text"} value={userName} onChange={(e) => { setUserName(e.target.value) }} />
+                    </div>
+                </div>
+                <div className='input-item'>
                     <p>Email</p>
                     <div className='input-box'>
                         <input type={"email"} value={email} onChange={(e) => { setEmail(e.target.value) }} />
@@ -37,10 +44,11 @@ function RegisterPage({baseUrl, setUserInfo, setLoginFlag}) {
                     </div>
                 </div>
                 <div className='button' onClick={() => {
-                    if (firstName !== '' && lastName !== '' && email !== '' && password !== '') {
+                    if (firstName !== '' && lastName !== '' && userName !== '' && email !== '' && password !== '') {
                         const userObject = {
                             firstName: firstName,
                             lastName: lastName,
+                            userName: userName,
                             email: email.toLowerCase(),
                             password: password
                         };
