@@ -5,7 +5,7 @@ import MainPage from './pages/MainPage'
 import RegisterPage from './pages/RegisterPage'
 
 function Routing() {
-    const baseUrl = "http://localhost:4000";
+    const baseUrl = "https://random-points-in-square-back.herokuapp.com";
     const [loginFlag, setLoginFlag] = useState(false)
     const [userInfo, setUserInfo] = useState({})
     const [adminFlag, setAdminFlag] = useState(false)
