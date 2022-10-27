@@ -6,7 +6,7 @@ import axios from 'axios';
 
 const MAX_NUM = Number.MAX_SAFE_INTEGER
 
-function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl }) {
+function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl, adminFlag }) {
     const cellA = [1, 0, 0, 0, 1, 0, 0, 1, 0, 1, 1, 1, 0, 1, 1, 0]
     const cellB = [0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0]
     const cellD = [0, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 1, 1, 0]
@@ -45,9 +45,8 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl }) {
         }
         else {
             clearInterval(interval);
-            axios.post(baseUrl + '/frame/all-frames')
+            axios.get(baseUrl + '/frame/all-frames')
                 .then(res => {
-                    // console.log(res.data)
                     setSavedData(res.data)
                 })
                 .catch((error) => {
@@ -95,15 +94,6 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl }) {
         else clearTimeout(timer)
         return () => clearTimeout(timer)
     })
-    // useEffect(() => {
-    //     axios.post(baseUrl + '/frame/all-frames')
-    //         .then(res => {
-    //             // console.log(res.data)
-    //             setSavedData(res.data)
-    //         })
-    //         .catch((error) => {
-    //         });
-    // }, [savedData])
 
     return (
         <div className={drawFlag ? 'MainPage curser' : 'MainPage'}>
@@ -317,7 +307,6 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl }) {
                             .then(res => {
                                 if (res.data?.success) {
                                     setComment('')
-                                    // alert('Added a new pattern...')
                                 }
                                 else {
                                     alert('Already existing pattern...')
@@ -366,8 +355,8 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl }) {
                                     </div>
                                     <div className='comment-area'>{savedItem?.comment}
                                         <p>Frame Speed Fps: {savedItem?.frameFps},
-                                        Shutter Speed Fps: {savedItem?.shutterFps},
-                                        Frequency: {savedItem?.frequency}</p>
+                                            Shutter Speed Fps: {savedItem?.shutterFps},
+                                            Frequency: {savedItem?.frequency}</p>
                                     </div>
                                 </div>
                                 <div className='row'>{savedItem?.time} {savedItem?.userName}
@@ -377,6 +366,15 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl }) {
                                         setShutterFps(savedItem?.shutterFps)
                                         setFrequency(new BigNumber(savedItem?.frequency))
                                     }}>Try it</div>
+                                    <div className={adminFlag ? 'button' : 'hidden'} onClick={() => {
+                                        // console.log(savedItem._id)
+                                        axios.delete(baseUrl + '/frame/delete-frame/' + savedItem._id)
+                                            .then(res => {
+                                                if (res.data?.success) { }
+                                                else { alert("There was an error...") }
+                                            })
+                                            .catch((error) => { alert("There was an error...") });
+                                    }}>Delete</div>
                                 </div>
                             </div>
                         )

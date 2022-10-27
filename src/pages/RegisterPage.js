@@ -41,7 +41,7 @@ function RegisterPage({baseUrl, setUserInfo, setLoginFlag}) {
                         const userObject = {
                             firstName: firstName,
                             lastName: lastName,
-                            email: email,
+                            email: email.toLowerCase(),
                             password: password
                         };
                         axios.post(baseUrl + '/user/create-user', userObject)

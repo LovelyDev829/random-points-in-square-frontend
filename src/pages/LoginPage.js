@@ -5,7 +5,7 @@ import axios from 'axios';
 function LoginPage({loginFlag, setLoginFlag, setUserInfo, baseUrl}) {
     const navigate = useNavigate();
     const logiN = () => {
-        axios.post(baseUrl + '/user/check-user', { email: email, password: password })
+        axios.post(baseUrl + '/user/check-user', { email: email.toLowerCase(), password: password })
             .then(res => {
                 if (res.data[0]) {
                     setUserInfo(res.data[0])
