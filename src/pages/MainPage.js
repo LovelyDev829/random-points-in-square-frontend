@@ -29,7 +29,8 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl, adm
     const navigate = useNavigate();
     const [mouseDownFlag, setMouseDownFlag] = useState(false)
     useEffect(() => {
-        if (!loginFlag){
+        if (!loginFlag || !userInfo.userName){
+            setLoginFlag(false)
             navigate('/login');
         }
     })
