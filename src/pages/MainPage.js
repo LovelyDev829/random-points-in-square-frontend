@@ -11,7 +11,7 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl, adm
     const cellB = [0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0]
     const cellD = [0, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 1, 1, 0]
     const cellC = [0, 0, 0, 1, 0, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0]
-    const unitNumber = 10
+    const unitNumber = 8
     const totalFrame = new BigNumber(16).pow(unitNumber * unitNumber);
     const [currentFrame, setCurrentFrame] = useState(new BigNumber(0))
     const [timerFlag, setTimerFlag] = useState(false)
