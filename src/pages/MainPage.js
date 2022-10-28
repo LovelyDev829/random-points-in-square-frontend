@@ -278,7 +278,9 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl, adm
             </div>
             <div className='go-to-frame'>
                 <p>Go To Frame</p>
-                <input type={'text'} min={1} value={inputValue} onChange={(e) => { setInputValue(e.target.value) }} />
+                <input type={'text'} min={1} value={inputValue} onChange={(e) => {
+                    if(/^[0-9\b]+$/.test(e.nativeEvent.data)) setInputValue(e.target.value)
+                }} />
                 <div className='button' onClick={() => { setCurrentFrame(new BigNumber(inputValue).minus(1)) }}>Go</div>
             </div>
             <div className='sliders'>
@@ -288,7 +290,9 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl, adm
                     }} step={1} min={1} max={MAX_NUM} />
                     <div className='row'>
                         <p>Frame Speed FPS : </p>
-                        <input className='long' type={'text'} value={fps.toFixed()} onChange={(e) => { setFps(new BigNumber(e.target.value)) }} />
+                        <input className='long' type={'text'} value={fps.toFixed()} onChange={(e) => {
+                            if(/^[0-9\b]+$/.test(e.nativeEvent.data)) setFps(new BigNumber(e.target.value))
+                        }} />
                     </div>
                 </div>
                 <div className='slider-box'>
@@ -312,7 +316,9 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl, adm
                     }} step={1} min={1} max={MAX_NUM} />
                     <div className='row'>
                         <p>Frequency : </p>
-                        <input className='long' type={'text'} value={frequency.toFixed()} onChange={(e) => { setFrequency(new BigNumber(e.target.value)) }} />
+                        <input className='long' type={'text'} value={frequency.toFixed()} onChange={(e) => {
+                            if(/^[0-9\b]+$/.test(e.nativeEvent.data)) setFrequency(new BigNumber(e.target.value))
+                        }} />
                     </div>
                 </div>
             </div>
