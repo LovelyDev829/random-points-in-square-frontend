@@ -38,10 +38,17 @@
                 width: 100%;
                 padding: 5px;
                 box-sizing: border-box;
-                // border: 1px solid black;
-                // background-color: #F9F9F9;
                 border-radius: 8px;
                 box-shadow: inset 0px 2px 6px rgba(0, 0, 0, 0.25);
+                position: relative;
+
+                .hide-eye {
+                    position: absolute;
+                    right: 15px;
+                    top: 9px;
+                    cursor: pointer;
+                }
+
 
                 input {
                     font-size: 25px;
@@ -51,6 +58,7 @@
                     border-radius: 5px;
                     outline-width: 0;
                     background-color: rgba(0, 0, 0, 0);
+                    padding-left: 10px;
                 }
             }
         }
@@ -119,6 +127,14 @@
                     background-color: #F9F9F9;
                     border-radius: 8px;
                     box-shadow: inset 0px 2px 6px rgba(0, 0, 0, 0.25);
+                    position: relative;
+
+                    .hide-eye {
+                        position: absolute;
+                        right: 15px;
+                        top: 9px;
+                        cursor: pointer;
+                    }
 
                     input {
                         font-size: 25px;
@@ -128,6 +144,7 @@
                         border-radius: 5px;
                         outline-width: 0;
                         background-color: rgba(0, 0, 0, 0);
+                        padding-left: 10px;
                     }
 
                     select {
@@ -140,12 +157,13 @@
                         background-color: rgba(0, 0, 0, 0);
                     }
                 }
-                
+
             }
+
             .forgot-password {
                 font-size: 20px;
                 cursor: pointer;
-    
+
                 &:hover {
                     color: rgb(39, 147, 254);
                 }
@@ -348,24 +366,25 @@
             background-color: black;
         }
 
-        .saved-items{
+        .saved-items {
             padding-top: 20px;
+
             .saved-item {
                 align-items: center;
                 margin: auto;
                 width: fit-content;
                 padding: 3px;
-    
+
                 .squares {
                     margin: 0px;
                     border: none;
-    
+
                     .square {
                         width: 10px !important;
                         height: 10px !important;
                     }
                 }
-    
+
                 .comment-area {
                     margin-left: 20px;
                     border: 1px solid black;
@@ -379,7 +398,8 @@
                     text-align: left;
                     padding: 5px;
                     position: relative;
-                    p{
+
+                    p {
                         margin: 0px;
                         font-size: 15px;
                         color: rgba(0, 0, 0, 0.439);
@@ -388,10 +408,12 @@
                         bottom: 5px;
                     }
                 }
-                &>.row:nth-child(2){
+
+                &>.row:nth-child(2) {
                     justify-content: end;
                     padding: 5px 0px 5px 0px;
-                    .button{
+
+                    .button {
                         margin: 0px 0px 0px 20px;
                         padding: 5px 20px 5px 20px;
                         width: fit-content;

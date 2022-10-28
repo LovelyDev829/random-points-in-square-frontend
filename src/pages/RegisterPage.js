@@ -1,5 +1,7 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
+import { ReactComponent as EyeIcon } from "../assets/eye.svg";
+import { ReactComponent as EyeOffIcon } from "../assets/eye-off.svg";
 import axios from 'axios';
 
 function RegisterPage({baseUrl, setUserInfo, setLoginFlag}) {
@@ -9,6 +11,7 @@ function RegisterPage({baseUrl, setUserInfo, setLoginFlag}) {
     const [userName, setUserName] = useState('')
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
+    const [passHideFlag, setPassHideFlag] = useState(true)
     return (
         <div className='RegisterPage'>
             <div className='main'>
@@ -40,7 +43,8 @@ function RegisterPage({baseUrl, setUserInfo, setLoginFlag}) {
                 <div className='input-item'>
                     <p>Password</p>
                     <div className='input-box'>
-                        <input type={"password"} value={password} onChange={(e) => { setPassword(e.target.value) }} />
+                        <input type={passHideFlag?"password":"text"} value={password} onChange={(e) => { setPassword(e.target.value) }} />
+                        <div className='hide-eye' onClick={()=>setPassHideFlag(!passHideFlag)}>{ passHideFlag?<EyeIcon/>:<EyeOffIcon/> }</div>
                     </div>
                 </div>
                 <div className='button' onClick={() => {
