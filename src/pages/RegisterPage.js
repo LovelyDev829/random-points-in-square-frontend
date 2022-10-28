@@ -59,8 +59,11 @@ function RegisterPage({baseUrl, setUserInfo, setLoginFlag}) {
                                     setLoginFlag(true)
                                     navigate('/main')
                                 }
+                                else if(!res.data?.success){
+                                    alert(res.data?.message)
+                                }
                                 else{
-                                    alert('Already existing user mail...')
+                                    alert("There was an error...")
                                 }
                             })
                             .catch((error) => { alert("There was an error...") });
