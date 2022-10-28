@@ -103,7 +103,7 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl, adm
         setCurrentFrame(newCurrentFrame)
     }
     return (
-        <div className={drawFlag ? 'MainPage curser' : 'MainPage'} onMouseUp={() => setMouseDownFlag(false)}>
+        <div className={drawFlag ? 'MainPage curser' : 'MainPage'} onMouseUp={() => {setMouseDownFlag(false); }}>
             <div className='header'>
                 <div className='user-name'>Hi, {userInfo.userName}</div>
                 <p>THE GOD PROJECT</p>
@@ -117,7 +117,9 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl, adm
             <div className={drawFlag ? 'button clear' : 'button clear disabled'} onClick={() => {
                 if (drawFlag) setCurrentFrame(totalFrame.minus(1))
             }}>CLEAR</div>
-            <div className='squares' onMouseDown={() => setMouseDownFlag(true)} onMouseLeave={() => setMouseDownFlag(false)} onMouseUp={() => setMouseDownFlag(false)}>
+            <div className='squares' onMouseDown={() => {setMouseDownFlag(true); }}
+            onMouseLeave={() => {setMouseDownFlag(false); }}
+            onMouseUp={() => {setMouseDownFlag(false); }}>
                 {
                     [...Array(unitNumber)].map((item, firstIndex) => {
                         var sixteenNumber = currentFrame.toString(16)
@@ -131,7 +133,9 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl, adm
                                             <div className='unit-squares' key={"first" + secondIndex}>
                                                 <div className='row'>
                                                     <div className={cellA[index] === 1 ? 'square black' : 'square'} onMouseOver={() => {
+                                                        // console.log("over")
                                                         if (!drawFlag || !mouseDownFlag) return;
+                                                        // console.log("overr");
                                                         [...Array(unitNumber * unitNumber)].forEach((item, tempIndex) => {
                                                             if (cellA[index] !== cellA[tempIndex] && cellB[index] === cellB[tempIndex]
                                                                 && cellC[index] === cellC[tempIndex] && cellD[index] === cellD[tempIndex]) {
@@ -139,7 +143,9 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl, adm
                                                             }
                                                         })
                                                     }} onMouseDown={() => {
+                                                        // console.log("Down")
                                                         if (!drawFlag) return;
+                                                        // console.log("downn");
                                                         [...Array(unitNumber * unitNumber)].forEach((item, tempIndex) => {
                                                             if (cellA[index] !== cellA[tempIndex] && cellB[index] === cellB[tempIndex]
                                                                 && cellC[index] === cellC[tempIndex] && cellD[index] === cellD[tempIndex]) {
@@ -148,7 +154,9 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl, adm
                                                         })
                                                     }}></div>
                                                     <div className={cellB[index] === 1 ? 'square black' : 'square'} onMouseOver={() => {
+                                                        // console.log("over")
                                                         if (!drawFlag || !mouseDownFlag) return;
+                                                        // console.log("overr");
                                                         [...Array(unitNumber * unitNumber)].forEach((item, tempIndex) => {
                                                             if (cellA[index] === cellA[tempIndex] && cellB[index] !== cellB[tempIndex]
                                                                 && cellC[index] === cellC[tempIndex] && cellD[index] === cellD[tempIndex]) {
@@ -156,7 +164,9 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl, adm
                                                             }
                                                         })
                                                     }} onMouseDown={() => {
+                                                        // console.log("Down")
                                                         if (!drawFlag) return;
+                                                        // console.log("downn");
                                                         [...Array(unitNumber * unitNumber)].forEach((item, tempIndex) => {
                                                             if (cellA[index] === cellA[tempIndex] && cellB[index] !== cellB[tempIndex]
                                                                 && cellC[index] === cellC[tempIndex] && cellD[index] === cellD[tempIndex]) {
@@ -167,7 +177,9 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl, adm
                                                 </div>
                                                 <div className='row'>
                                                     <div className={cellC[index] === 1 ? 'square black' : 'square'} onMouseOver={() => {
+                                                        // console.log("over")
                                                         if (!drawFlag || !mouseDownFlag) return;
+                                                        // console.log("overr");
                                                         [...Array(unitNumber * unitNumber)].forEach((item, tempIndex) => {
                                                             if (cellA[index] === cellA[tempIndex] && cellB[index] === cellB[tempIndex]
                                                                 && cellC[index] !== cellC[tempIndex] && cellD[index] === cellD[tempIndex]) {
@@ -175,7 +187,9 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl, adm
                                                             }
                                                         })
                                                     }} onMouseDown={() => {
+                                                        // console.log("Down")
                                                         if (!drawFlag) return;
+                                                        // console.log("downn");
                                                         [...Array(unitNumber * unitNumber)].forEach((item, tempIndex) => {
                                                             if (cellA[index] === cellA[tempIndex] && cellB[index] === cellB[tempIndex]
                                                                 && cellC[index] !== cellC[tempIndex] && cellD[index] === cellD[tempIndex]) {
@@ -184,7 +198,9 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl, adm
                                                         })
                                                     }}></div>
                                                     <div className={cellD[index] === 1 ? 'square black' : 'square'} onMouseOver={() => {
+                                                        // console.log("over")
                                                         if (!drawFlag || !mouseDownFlag) return;
+                                                        // console.log("overr");
                                                         [...Array(unitNumber * unitNumber)].forEach((item, tempIndex) => {
                                                             if (cellA[index] === cellA[tempIndex] && cellB[index] === cellB[tempIndex]
                                                                 && cellC[index] === cellC[tempIndex] && cellD[index] !== cellD[tempIndex]) {
@@ -192,7 +208,9 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl, adm
                                                             }
                                                         })
                                                     }} onMouseDown={() => {
+                                                        // console.log("Down")
                                                         if (!drawFlag) return;
+                                                        // console.log("downn");
                                                         [...Array(unitNumber * unitNumber)].forEach((item, tempIndex) => {
                                                             if (cellA[index] === cellA[tempIndex] && cellB[index] === cellB[tempIndex]
                                                                 && cellC[index] === cellC[tempIndex] && cellD[index] !== cellD[tempIndex]) {
