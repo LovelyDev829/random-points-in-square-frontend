@@ -98,7 +98,7 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl, adm
     return (
         <div className={drawFlag ? 'MainPage curser' : 'MainPage'}>
             <div className='header'>
-                <div className='user-name'>Hi, {userInfo.firstName}</div>
+                <div className='user-name'>Hi, {userInfo.userName}</div>
                 <p>Creating a partucular square</p>
                 <div className='button' onClick={() => {
                     setLoginFlag(false)
@@ -305,7 +305,7 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl, adm
                             frame: currentFrame.toString(),
                             comment: comment,
                             userId: userInfo._id,
-                            userName: userInfo.firstName,
+                            userName: userInfo.userName,
                             frameFps: fps,
                             shutterFps: shutterFps,
                             frequency: frequency.toString()
