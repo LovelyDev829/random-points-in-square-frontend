@@ -27,6 +27,7 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl, adm
     const [comment, setComment] = useState('')
     const [savedData, setSavedData] = useState([])
     const navigate = useNavigate();
+    const [mouseDownFlag, setMouseDownFlag] = useState(false)
     useEffect(() => {
         if (!loginFlag) navigate('/login');
     })
@@ -92,8 +93,17 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl, adm
         return () => clearTimeout(timer)
     })
 
+    function squareClickedHadle(sixteenNumber, tempIndex, currentCell) {
+        const chIndex = (unitNumber * unitNumber) - currentCell
+        var newSixteenNumber = sixteenNumber;
+        const round = (unitNumber * unitNumber) - sixteenNumber.length;
+        [...Array(round)].forEach(() => { newSixteenNumber = '0' + newSixteenNumber })
+        newSixteenNumber = newSixteenNumber.substring(0, chIndex) + tempIndex.toString(16) + newSixteenNumber.substring(chIndex + 1)
+        const newCurrentFrame = new BigNumber(newSixteenNumber, 16)
+        setCurrentFrame(newCurrentFrame)
+    }
     return (
-        <div className={drawFlag ? 'MainPage curser' : 'MainPage'}>
+        <div className={drawFlag ? 'MainPage curser' : 'MainPage'} onMouseUp={() => setMouseDownFlag(false)}>
             <div className='header'>
                 <div className='user-name'>Hi, {userInfo.userName}</div>
                 <p>THE GOD PROJECT</p>
@@ -107,76 +117,86 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl, adm
             <div className={drawFlag ? 'button clear' : 'button clear disabled'} onClick={() => {
                 if (drawFlag) setCurrentFrame(totalFrame.minus(1))
             }}>CLEAR</div>
-            <div className='squares'>
+            <div className='squares' onMouseDown={() => setMouseDownFlag(true)} onMouseLeave={() => setMouseDownFlag(false)} onMouseUp={() => setMouseDownFlag(false)}>
                 {
                     [...Array(unitNumber)].map((item, firstIndex) => {
+                        var sixteenNumber = currentFrame.toString(16)
                         return (
                             <div className='row' key={"first" + firstIndex}>
                                 {
                                     [...Array(unitNumber)].map((item, secondIndex) => {
-
                                         const currentCell = (unitNumber * unitNumber) - parseInt(firstIndex.toString() + secondIndex.toString(), unitNumber)
-                                        var sixteenNumber = currentFrame.toString(16)
                                         const index = parseInt(sixteenNumber[sixteenNumber.length - currentCell], 16) || 0
                                         return (
                                             <div className='unit-squares' key={"first" + secondIndex}>
                                                 <div className='row'>
-                                                    <div className={cellA[index] === 1 ? 'square black' : 'square'} onClick={() => {
+                                                    <div className={cellA[index] === 1 ? 'square black' : 'square'} onMouseOver={() => {
+                                                        if (!drawFlag || !mouseDownFlag) return;
+                                                        [...Array(unitNumber * unitNumber)].forEach((item, tempIndex) => {
+                                                            if (cellA[index] !== cellA[tempIndex] && cellB[index] === cellB[tempIndex]
+                                                                && cellC[index] === cellC[tempIndex] && cellD[index] === cellD[tempIndex]) {
+                                                                squareClickedHadle(sixteenNumber, tempIndex, currentCell)
+                                                            }
+                                                        })
+                                                    }} onMouseDown={() => {
                                                         if (!drawFlag) return;
                                                         [...Array(unitNumber * unitNumber)].forEach((item, tempIndex) => {
-
-                                                            if (cellA[index] !== cellA[tempIndex] && cellB[index] === cellB[tempIndex] && cellC[index] === cellC[tempIndex] && cellD[index] === cellD[tempIndex]) {
-                                                                const chIndex = (unitNumber * unitNumber) - currentCell
-                                                                var newSixteenNumber = sixteenNumber;
-                                                                const round = (unitNumber * unitNumber) - sixteenNumber.length;
-                                                                [...Array(round)].forEach(() => { newSixteenNumber = '0' + newSixteenNumber })
-                                                                newSixteenNumber = newSixteenNumber.substring(0, chIndex) + tempIndex.toString(16) + newSixteenNumber.substring(chIndex + 1)
-                                                                const newCurrentFrame = new BigNumber(newSixteenNumber, 16)
-                                                                setCurrentFrame(newCurrentFrame)
+                                                            if (cellA[index] !== cellA[tempIndex] && cellB[index] === cellB[tempIndex]
+                                                                && cellC[index] === cellC[tempIndex] && cellD[index] === cellD[tempIndex]) {
+                                                                squareClickedHadle(sixteenNumber, tempIndex, currentCell)
                                                             }
                                                         })
                                                     }}></div>
-                                                    <div className={cellB[index] === 1 ? 'square black' : 'square'} onClick={() => {
+                                                    <div className={cellB[index] === 1 ? 'square black' : 'square'} onMouseOver={() => {
+                                                        if (!drawFlag || !mouseDownFlag) return;
+                                                        [...Array(unitNumber * unitNumber)].forEach((item, tempIndex) => {
+                                                            if (cellA[index] === cellA[tempIndex] && cellB[index] !== cellB[tempIndex]
+                                                                && cellC[index] === cellC[tempIndex] && cellD[index] === cellD[tempIndex]) {
+                                                                squareClickedHadle(sixteenNumber, tempIndex, currentCell)
+                                                            }
+                                                        })
+                                                    }} onMouseDown={() => {
                                                         if (!drawFlag) return;
                                                         [...Array(unitNumber * unitNumber)].forEach((item, tempIndex) => {
-                                                            if (cellA[index] === cellA[tempIndex] && cellB[index] !== cellB[tempIndex] && cellC[index] === cellC[tempIndex] && cellD[index] === cellD[tempIndex]) {
-                                                                const chIndex = (unitNumber * unitNumber) - currentCell
-                                                                var newSixteenNumber = sixteenNumber;
-                                                                const round = (unitNumber * unitNumber) - sixteenNumber.length;
-                                                                [...Array(round)].forEach(() => { newSixteenNumber = '0' + newSixteenNumber })
-                                                                newSixteenNumber = newSixteenNumber.substring(0, chIndex) + tempIndex.toString(16) + newSixteenNumber.substring(chIndex + 1)
-                                                                const newCurrentFrame = new BigNumber(newSixteenNumber, 16)
-                                                                setCurrentFrame(newCurrentFrame)
+                                                            if (cellA[index] === cellA[tempIndex] && cellB[index] !== cellB[tempIndex]
+                                                                && cellC[index] === cellC[tempIndex] && cellD[index] === cellD[tempIndex]) {
+                                                                squareClickedHadle(sixteenNumber, tempIndex, currentCell)
                                                             }
                                                         })
                                                     }}></div>
                                                 </div>
                                                 <div className='row'>
-                                                    <div className={cellC[index] === 1 ? 'square black' : 'square'} onClick={() => {
+                                                    <div className={cellC[index] === 1 ? 'square black' : 'square'} onMouseOver={() => {
+                                                        if (!drawFlag || !mouseDownFlag) return;
+                                                        [...Array(unitNumber * unitNumber)].forEach((item, tempIndex) => {
+                                                            if (cellA[index] === cellA[tempIndex] && cellB[index] === cellB[tempIndex]
+                                                                && cellC[index] !== cellC[tempIndex] && cellD[index] === cellD[tempIndex]) {
+                                                                squareClickedHadle(sixteenNumber, tempIndex, currentCell)
+                                                            }
+                                                        })
+                                                    }} onMouseDown={() => {
                                                         if (!drawFlag) return;
                                                         [...Array(unitNumber * unitNumber)].forEach((item, tempIndex) => {
-                                                            if (cellA[index] === cellA[tempIndex] && cellB[index] === cellB[tempIndex] && cellC[index] !== cellC[tempIndex] && cellD[index] === cellD[tempIndex]) {
-                                                                const chIndex = (unitNumber * unitNumber) - currentCell
-                                                                var newSixteenNumber = sixteenNumber;
-                                                                const round = (unitNumber * unitNumber) - sixteenNumber.length;
-                                                                [...Array(round)].forEach(() => { newSixteenNumber = '0' + newSixteenNumber })
-                                                                newSixteenNumber = newSixteenNumber.substring(0, chIndex) + tempIndex.toString(16) + newSixteenNumber.substring(chIndex + 1)
-                                                                const newCurrentFrame = new BigNumber(newSixteenNumber, 16)
-                                                                setCurrentFrame(newCurrentFrame)
+                                                            if (cellA[index] === cellA[tempIndex] && cellB[index] === cellB[tempIndex]
+                                                                && cellC[index] !== cellC[tempIndex] && cellD[index] === cellD[tempIndex]) {
+                                                                squareClickedHadle(sixteenNumber, tempIndex, currentCell)
                                                             }
                                                         })
                                                     }}></div>
-                                                    <div className={cellD[index] === 1 ? 'square black' : 'square'} onClick={() => {
+                                                    <div className={cellD[index] === 1 ? 'square black' : 'square'} onMouseOver={() => {
+                                                        if (!drawFlag || !mouseDownFlag) return;
+                                                        [...Array(unitNumber * unitNumber)].forEach((item, tempIndex) => {
+                                                            if (cellA[index] === cellA[tempIndex] && cellB[index] === cellB[tempIndex]
+                                                                && cellC[index] === cellC[tempIndex] && cellD[index] !== cellD[tempIndex]) {
+                                                                squareClickedHadle(sixteenNumber, tempIndex, currentCell)
+                                                            }
+                                                        })
+                                                    }} onMouseDown={() => {
                                                         if (!drawFlag) return;
                                                         [...Array(unitNumber * unitNumber)].forEach((item, tempIndex) => {
-                                                            if (cellA[index] === cellA[tempIndex] && cellB[index] === cellB[tempIndex] && cellC[index] === cellC[tempIndex] && cellD[index] !== cellD[tempIndex]) {
-                                                                const chIndex = (unitNumber * unitNumber) - currentCell
-                                                                var newSixteenNumber = sixteenNumber;
-                                                                const round = (unitNumber * unitNumber) - sixteenNumber.length;
-                                                                [...Array(round)].forEach(() => { newSixteenNumber = '0' + newSixteenNumber })
-                                                                newSixteenNumber = newSixteenNumber.substring(0, chIndex) + tempIndex.toString(16) + newSixteenNumber.substring(chIndex + 1)
-                                                                const newCurrentFrame = new BigNumber(newSixteenNumber, 16)
-                                                                setCurrentFrame(newCurrentFrame)
+                                                            if (cellA[index] === cellA[tempIndex] && cellB[index] === cellB[tempIndex]
+                                                                && cellC[index] === cellC[tempIndex] && cellD[index] !== cellD[tempIndex]) {
+                                                                squareClickedHadle(sixteenNumber, tempIndex, currentCell)
                                                             }
                                                         })
                                                     }}></div>
