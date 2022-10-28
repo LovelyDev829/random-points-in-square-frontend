@@ -301,15 +301,11 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl, adm
                             alert('Please leave a comment...')
                             return
                         }
-                        var today = new Date()
-                        var date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
-                        var time = today.getHours() + ':' + today.getMinutes() + ':' + today.getSeconds();
                         const frameObject = {
                             frame: currentFrame.toString(),
                             comment: comment,
                             userId: userInfo._id,
                             userName: userInfo.firstName,
-                            time: date + ' ' + time,
                             frameFps: fps,
                             shutterFps: shutterFps,
                             frequency: frequency.toString()
@@ -370,7 +366,7 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl, adm
                                             Frequency: {savedItem?.frequency}</p>
                                     </div>
                                 </div>
-                                <div className='row'>{savedItem?.time} {savedItem?.userName}
+                                <div className='row'>{savedItem?.commentDateTime} {savedItem?.userName}
                                     <div className='button' onClick={() => {
                                         setCurrentFrame(dispFrame)
                                         setFps(savedItem?.frameFps)
