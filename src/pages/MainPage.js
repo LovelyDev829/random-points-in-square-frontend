@@ -16,7 +16,7 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl, adm
     const [currentFrame, setCurrentFrame] = useState(new BigNumber(0))
     const [timerFlag, setTimerFlag] = useState(false)
     const [inputValue, setInputValue] = useState('1')
-    const [fps, setFps] = useState(50)
+    const [fps, setFps] = useState(new BigNumber(100))
     const [shutterFps, setShutterFps] = useState(50)
     const [frequency, setFrequency] = useState(new BigNumber(1))
     const [forwardFlag, setForwardFlag] = useState(false)
@@ -34,12 +34,11 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl, adm
         var interval
         if (timerFlag) {
             interval = setInterval(() => {
-                var times = (fps / shutterFps).toFixed()
-                var tempCurrentFrame = currentFrame
-                while (times--) {
-                    if (tempCurrentFrame.plus(frequency).comparedTo(totalFrame) === 1) tempCurrentFrame = tempCurrentFrame.plus(frequency).minus(totalFrame)
-                    else tempCurrentFrame = tempCurrentFrame.plus(frequency)
-                }
+                var times = fps.dividedToIntegerBy(shutterFps)
+                var tempTotalFrame = currentFrame.plus(frequency.multipliedBy(times))
+                var multipleValue = tempTotalFrame.dividedToIntegerBy(totalFrame)
+                var tempCurrentFrame = tempTotalFrame.minus(totalFrame.multipliedBy(multipleValue))
+                console.log(times.toFixed(), tempTotalFrame.toFixed(), multipleValue.toFixed(), tempCurrentFrame.toFixed())
                 setCurrentFrame(tempCurrentFrame)
             }, (1000 / shutterFps));
         }
@@ -242,32 +241,26 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl, adm
             </div>
             <div className='sliders'>
                 <div className='slider-box'>
-                    <Slider value={fps} onChange={(e) => {
-                        var tempValue = e.target.value
-                        setFps(tempValue)
-                        if (tempValue < shutterFps) setShutterFps(tempValue)
-                    }} step={1} min={1} max={120} />
+                <Slider value={parseInt(fps?.dividedBy(totalFrame).multipliedBy(MAX_NUM).toFixed()) || 0} onChange={(e) => {
+                        setFps(totalFrame.dividedBy(MAX_NUM - 1).multipliedBy(e.target.value - 1).plus(1).integerValue(BigNumber.ROUND_FLOOR))
+                    }} step={1} min={1} max={MAX_NUM} />
                     <div className='row'>
                         <p>Frame Speed FPS : </p>
-                        <input type={'number'} min={1} max={120} value={fps} onChange={(e) => {
-                            var tempValue = e.target.value
-                            setFps(tempValue)
-                            if (tempValue < shutterFps) setShutterFps(tempValue)
-                        }} />
+                        <input className='long' type={'text'} value={fps.toFixed()} onChange={(e) => { setFps(new BigNumber(e.target.value)) }} />
                     </div>
                 </div>
                 <div className='slider-box'>
                     <Slider value={shutterFps} onChange={(e) => {
                         var tempValue = e.target.value
                         setShutterFps(tempValue)
-                        if (tempValue > fps) setFps(tempValue)
+                        if (fps.comparedTo(tempValue) === -1) setFps(new BigNumber(tempValue))
                     }} step={1} min={1} max={120} />
                     <div className='row'>
                         <p>Shutter Speed FPS : </p>
                         <input type={'number'} min={1} max={120} value={shutterFps} onChange={(e) => {
                             var tempValue = e.target.value
                             setShutterFps(tempValue)
-                            if (tempValue > fps) setFps(tempValue)
+                            if (fps.comparedTo(tempValue) === -1) setFps(new BigNumber(tempValue))
                         }} />
                     </div>
                 </div>
@@ -306,7 +299,7 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl, adm
                             comment: comment,
                             userId: userInfo._id,
                             userName: userInfo.userName,
-                            frameFps: fps,
+                            frameFps: fps.toString(),
                             shutterFps: shutterFps,
                             frequency: frequency.toString()
                         };
@@ -370,7 +363,7 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl, adm
                                     <div className='button' onClick={() => {
                                         setCurrentFrame(dispFrame)
                                         setInputValue(dispFrame.plus(1))
-                                        setFps(savedItem?.frameFps)
+                                        setFps(new BigNumber(savedItem?.frameFps))
                                         setShutterFps(savedItem?.shutterFps)
                                         setFrequency(new BigNumber(savedItem?.frequency))
                                     }}>Try it</div>

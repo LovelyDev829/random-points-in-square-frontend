@@ -265,11 +265,11 @@
                 input {
                     margin: 0px 10px 0px 10px;
                     font-size: 20px;
-                    width: 80px;
+                    width: 100px;
                     padding: 5px 10px 5px 10px;
 
                     &.long {
-                        min-width: 340px;
+                        min-width:  250px;
                     }
                 }
 
@@ -457,9 +457,9 @@
         &.disabled {
             background-color: rgb(100, 119, 153);
 
-            &:hover {
-                background-color: rgb(27, 89, 195);
-            }
+            // &:hover {
+            //     background-color: rgb(27, 89, 195);
+            // }
         }
 
         &.clear {
