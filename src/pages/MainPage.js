@@ -41,7 +41,6 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl, adm
                     else tempCurrentFrame = tempCurrentFrame.plus(frequency)
                 }
                 setCurrentFrame(tempCurrentFrame)
-                setInputValue(tempCurrentFrame.plus(1))
             }, (1000 / shutterFps));
         }
         else {
@@ -62,27 +61,15 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl, adm
         if (forwardFlag) {
             timer = setTimeout(() => {
                 tempCurrentFrame = currentFrame.plus(frequency)
-                if (tempCurrentFrame.comparedTo(totalFrame) === 1){
-                    setCurrentFrame(tempCurrentFrame.minus(totalFrame))
-                    setInputValue(tempCurrentFrame.minus(totalFrame).plus(1))
-                }
-                else{
-                    setCurrentFrame(tempCurrentFrame)
-                    setInputValue(tempCurrentFrame.plus(1))
-                }
+                if (tempCurrentFrame.comparedTo(totalFrame) === 1) setCurrentFrame(tempCurrentFrame.minus(totalFrame))
+                else setCurrentFrame(tempCurrentFrame)
             }, 100)
         }
         else if (backwardFlag) {
             timer = setTimeout(() => {
                 tempCurrentFrame = currentFrame.minus(frequency)
-                if (tempCurrentFrame.comparedTo(0) === -1){
-                    setCurrentFrame(tempCurrentFrame.plus(totalFrame))
-                    setInputValue(tempCurrentFrame.plus(totalFrame).plus(1))
-                }
-                else{
-                    setCurrentFrame(tempCurrentFrame)
-                    setInputValue(tempCurrentFrame.plus(1))
-                }
+                if (tempCurrentFrame.comparedTo(0) === -1) setCurrentFrame(tempCurrentFrame.plus(totalFrame))
+                else setCurrentFrame(tempCurrentFrame)
             }, 100)
         }
         else clearTimeout(timer)
@@ -93,27 +80,15 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl, adm
         if (stepForwardFlag) {
             timer = setTimeout(() => {
                 tempCurrentFrame = currentFrame.plus(1)
-                if (tempCurrentFrame.comparedTo(totalFrame) === 1){
-                    setCurrentFrame(new BigNumber(0))
-                    setInputValue(new BigNumber(1))
-                }
-                else{
-                    setCurrentFrame(tempCurrentFrame)
-                    setInputValue(tempCurrentFrame.plus(1))
-                }
+                if (tempCurrentFrame.comparedTo(totalFrame) === 1) setCurrentFrame(new BigNumber(0))
+                else setCurrentFrame(tempCurrentFrame)
             }, 100)
         }
         else if (stepBackwardFlag) {
             timer = setTimeout(() => {
                 tempCurrentFrame = currentFrame.minus(1)
-                if (tempCurrentFrame.comparedTo(0) === -1){
-                    setCurrentFrame(totalFrame)
-                    setInputValue(totalFrame.plus(1))
-                }
-                else{
-                    setCurrentFrame(tempCurrentFrame)
-                    setInputValue(tempCurrentFrame.plus(1))
-                }
+                if (tempCurrentFrame.comparedTo(0) === -1) setCurrentFrame(totalFrame)
+                else setCurrentFrame(tempCurrentFrame)
             }, 100)
         }
         else clearTimeout(timer)
@@ -133,10 +108,7 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl, adm
             </div>
             <div className={drawFlag ? 'button draw-mode' : 'button draw-mode disabled'} onClick={() => setDrawFlag(!drawFlag)}>DRAW MODE</div>
             <div className={drawFlag ? 'button clear' : 'button clear disabled'} onClick={() => {
-                if (drawFlag){
-                    setCurrentFrame(totalFrame.minus(1))
-                    setInputValue(totalFrame)
-                }
+                if (drawFlag) setCurrentFrame(totalFrame.minus(1))
             }}>CLEAR</div>
             <div className='squares'>
                 {
@@ -164,7 +136,6 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl, adm
                                                                 newSixteenNumber = newSixteenNumber.substring(0, chIndex) + tempIndex.toString(16) + newSixteenNumber.substring(chIndex + 1)
                                                                 const newCurrentFrame = new BigNumber(newSixteenNumber, 16)
                                                                 setCurrentFrame(newCurrentFrame)
-                                                                setInputValue(newCurrentFrame.plus(1))
                                                             }
                                                         })
                                                     }}></div>
@@ -179,7 +150,6 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl, adm
                                                                 newSixteenNumber = newSixteenNumber.substring(0, chIndex) + tempIndex.toString(16) + newSixteenNumber.substring(chIndex + 1)
                                                                 const newCurrentFrame = new BigNumber(newSixteenNumber, 16)
                                                                 setCurrentFrame(newCurrentFrame)
-                                                                setInputValue(newCurrentFrame.plus(1))
                                                             }
                                                         })
                                                     }}></div>
@@ -196,7 +166,6 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl, adm
                                                                 newSixteenNumber = newSixteenNumber.substring(0, chIndex) + tempIndex.toString(16) + newSixteenNumber.substring(chIndex + 1)
                                                                 const newCurrentFrame = new BigNumber(newSixteenNumber, 16)
                                                                 setCurrentFrame(newCurrentFrame)
-                                                                setInputValue(newCurrentFrame.plus(1))
                                                             }
                                                         })
                                                     }}></div>
@@ -211,7 +180,6 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl, adm
                                                                 newSixteenNumber = newSixteenNumber.substring(0, chIndex) + tempIndex.toString(16) + newSixteenNumber.substring(chIndex + 1)
                                                                 const newCurrentFrame = new BigNumber(newSixteenNumber, 16)
                                                                 setCurrentFrame(newCurrentFrame)
-                                                                setInputValue(newCurrentFrame.plus(1))
                                                             }
                                                         })
                                                     }}></div>
@@ -228,20 +196,14 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl, adm
             <div className='buttons'>
                 <div className='button' onClick={() => { setTimerFlag(true) }}>Start</div>
                 <div className='button' onClick={() => { setTimerFlag(false) }}>Pause</div>
-                <div className='button' onClick={() => { setCurrentFrame(new BigNumber(0)); setInputValue(new BigNumber(1))}}>Reset</div>
+                <div className='button' onClick={() => { setCurrentFrame(new BigNumber(0)); }}>Reset</div>
             </div>
             <div className='current-frame'>Total Frame : {totalFrame.toFixed()}</div>
             <div className='slider'>
                 <div className='button' onMouseDown={() => setBackwardFlag(true)} onClick={() => {
                     var tempCurrentFrame = currentFrame.minus(frequency)
-                    if (tempCurrentFrame.comparedTo(0) === -1){
-                        setCurrentFrame(tempCurrentFrame.plus(totalFrame))
-                        setInputValue(tempCurrentFrame.plus(totalFrame).plus(1))
-                    }
-                    else{
-                        setCurrentFrame(tempCurrentFrame)
-                        setInputValue(tempCurrentFrame.plus(1))
-                    }
+                    if (tempCurrentFrame.comparedTo(0) === -1) setCurrentFrame(tempCurrentFrame.plus(totalFrame))
+                    else setCurrentFrame(tempCurrentFrame)
                 }}
                     onMouseLeave={() => setBackwardFlag(false)} onMouseUp={() => setBackwardFlag(false)}>{'<<<'}</div>
 
@@ -249,45 +211,26 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl, adm
                     onMouseLeave={() => setStepBackwardFlag(false)} onMouseUp={() => setStepBackwardFlag(false)}
                     onClick={() => {
                         var tempCurrentFrame = currentFrame.minus(1)
-                        if (tempCurrentFrame.comparedTo(0) === -1){
-                            setCurrentFrame(totalFrame)
-                            setInputValue(totalFrame.plus(1))
-                        }
-                        else{
-                            setCurrentFrame(tempCurrentFrame)
-                            setInputValue(tempCurrentFrame.plus(1))
-                        }
+                        if (tempCurrentFrame.comparedTo(0) === -1) setCurrentFrame(totalFrame)
+                        else setCurrentFrame(tempCurrentFrame)
                     }}>{'<'}</div>
 
                 <Slider step={1} min={1} max={MAX_NUM} value={parseInt(currentFrame.dividedBy(totalFrame).multipliedBy(MAX_NUM).toFixed())} onChange={(e) => {
                     setCurrentFrame(totalFrame.dividedBy(MAX_NUM - 1).multipliedBy(e.target.value - 1).integerValue(BigNumber.ROUND_FLOOR))
-                    setInputValue(totalFrame.dividedBy(MAX_NUM - 1).multipliedBy(e.target.value - 1).integerValue(BigNumber.ROUND_FLOOR).plus(1))
                 }} />
 
                 <div className='button right' onMouseDown={() => setStepForwardFlag(true)}
                     onMouseLeave={() => setStepForwardFlag(false)} onMouseUp={() => setStepForwardFlag(false)}
                     onClick={() => {
                         var tempCurrentFrame = currentFrame.plus(1)
-                        if (tempCurrentFrame.comparedTo(totalFrame) === 1){
-                            setCurrentFrame(new BigNumber(0))
-                            setInputValue(new BigNumber(1))
-                        }
-                        else{
-                            setCurrentFrame(tempCurrentFrame)
-                            setInputValue(tempCurrentFrame.plus(1))
-                        }
+                        if (tempCurrentFrame.comparedTo(totalFrame) === 1) setCurrentFrame(new BigNumber(0))
+                        else setCurrentFrame(tempCurrentFrame)
                     }}>{'>'}</div>
 
                 <div className='button' onMouseDown={() => setForwardFlag(true)} onClick={() => {
                     var tempCurrentFrame = currentFrame.plus(frequency)
-                    if (tempCurrentFrame.comparedTo(totalFrame) === 1){
-                        setCurrentFrame(tempCurrentFrame.minus(totalFrame))
-                        setInputValue(tempCurrentFrame.minus(totalFrame).plus(1))
-                    }
-                    else{
-                        setCurrentFrame(tempCurrentFrame)
-                        setInputValue(tempCurrentFrame.plus(1))
-                    }
+                    if (tempCurrentFrame.comparedTo(totalFrame) === 1) setCurrentFrame(tempCurrentFrame.minus(totalFrame))
+                    else setCurrentFrame(tempCurrentFrame)
                 }}
                     onMouseLeave={() => setForwardFlag(false)} onMouseUp={() => setForwardFlag(false)}>{'>>>'}</div>
             </div>
@@ -341,7 +284,7 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl, adm
             <div className='reset-all'>
                 <div className='button' onClick={() => {
                     setCurrentFrame(new BigNumber(0));
-                    setInputValue(new BigNumber(1))
+                    setInputValue(0);
                     setTimerFlag(false);
                     setFps(100)
                     setFrequency(new BigNumber(1))
