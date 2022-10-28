@@ -243,8 +243,39 @@
             }
         }
 
-        .current-frame {
+        .total-frame {
             padding: 10px 0px 10px 0px;
+            max-width: 790px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            display: inline-block;
+            word-break: break-all;
+        }
+
+        .row-center {
+            min-height: 52px;
+            width: fit-content;
+            margin: auto;
+            text-align: left;
+            display: flex;
+            align-items: center;
+
+            p {
+                margin: 0px 30px 0px 5px;
+            }
+
+            input {
+                width: 20px;
+                height: 30px;
+            }
+
+            .current-frame {
+                width: 790px;
+                white-space: pre-wrap;
+                word-wrap: break-word;
+                display: inline-block;
+                word-break: break-all;
+            }
         }
 
         .sliders {
@@ -290,7 +321,7 @@
             input {
                 margin: 0px 10px 0px 10px;
                 font-size: 20px;
-                width: 400px;
+                min-width: 250px;
                 padding: 5px 10px 5px 10px;
             }
         }
@@ -306,7 +337,7 @@
             .button {
                 align-items: center;
                 user-select: none;
-                padding-bottom: 20px;
+                padding-bottom: 9px;
                 margin: 0px 5px 0px 5px;
 
                 &.left {
@@ -381,8 +412,8 @@
                     border: none;
 
                     .square {
-                        width: 10px !important;
-                        height: 10px !important;
+                        width: 3px !important;
+                        height: 3px !important;
                     }
                 }
 
@@ -407,6 +438,14 @@
                         position: absolute;
                         right: 5px;
                         bottom: 5px;
+                        white-space: pre-wrap;
+                        word-wrap: break-word;
+                        display: inline-block;
+                        width: 100%;
+                        padding-left: 10px;
+                        box-sizing: border-box;
+                        text-align: right;
+                        word-break: break-all;
                     }
                 }
 

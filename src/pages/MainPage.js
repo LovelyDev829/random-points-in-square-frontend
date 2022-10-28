@@ -11,7 +11,7 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl, adm
     const cellB = [0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0]
     const cellD = [0, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 1, 1, 0]
     const cellC = [0, 0, 0, 1, 0, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0]
-    const unitNumber = 4
+    const unitNumber = 10
     const totalFrame = new BigNumber(16).pow(unitNumber * unitNumber);
     const [currentFrame, setCurrentFrame] = useState(new BigNumber(0))
     const [timerFlag, setTimerFlag] = useState(false)
@@ -38,7 +38,6 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl, adm
                 var tempTotalFrame = currentFrame.plus(frequency.multipliedBy(times))
                 var multipleValue = tempTotalFrame.dividedToIntegerBy(totalFrame)
                 var tempCurrentFrame = tempTotalFrame.minus(totalFrame.multipliedBy(multipleValue))
-                console.log(times.toFixed(), tempTotalFrame.toFixed(), multipleValue.toFixed(), tempCurrentFrame.toFixed())
                 setCurrentFrame(tempCurrentFrame)
             }, (1000 / shutterFps));
         }
@@ -48,8 +47,7 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl, adm
                 .then(res => {
                     setSavedData(res.data)
                 })
-                .catch((error) => {
-                });
+                .catch((error) => { });
         }
         return () => {
             clearInterval(interval);
@@ -130,8 +128,8 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl, adm
                                                             if (cellA[index] !== cellA[tempIndex] && cellB[index] === cellB[tempIndex] && cellC[index] === cellC[tempIndex] && cellD[index] === cellD[tempIndex]) {
                                                                 const chIndex = (unitNumber * unitNumber) - currentCell
                                                                 var newSixteenNumber = sixteenNumber;
-                                                                const round = (unitNumber * unitNumber)-sixteenNumber.length;
-                                                                [...Array(round)].forEach(()=>{ newSixteenNumber = '0'+newSixteenNumber })
+                                                                const round = (unitNumber * unitNumber) - sixteenNumber.length;
+                                                                [...Array(round)].forEach(() => { newSixteenNumber = '0' + newSixteenNumber })
                                                                 newSixteenNumber = newSixteenNumber.substring(0, chIndex) + tempIndex.toString(16) + newSixteenNumber.substring(chIndex + 1)
                                                                 const newCurrentFrame = new BigNumber(newSixteenNumber, 16)
                                                                 setCurrentFrame(newCurrentFrame)
@@ -144,8 +142,8 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl, adm
                                                             if (cellA[index] === cellA[tempIndex] && cellB[index] !== cellB[tempIndex] && cellC[index] === cellC[tempIndex] && cellD[index] === cellD[tempIndex]) {
                                                                 const chIndex = (unitNumber * unitNumber) - currentCell
                                                                 var newSixteenNumber = sixteenNumber;
-                                                                const round = (unitNumber * unitNumber)-sixteenNumber.length;
-                                                                [...Array(round)].forEach(()=>{ newSixteenNumber = '0'+newSixteenNumber })
+                                                                const round = (unitNumber * unitNumber) - sixteenNumber.length;
+                                                                [...Array(round)].forEach(() => { newSixteenNumber = '0' + newSixteenNumber })
                                                                 newSixteenNumber = newSixteenNumber.substring(0, chIndex) + tempIndex.toString(16) + newSixteenNumber.substring(chIndex + 1)
                                                                 const newCurrentFrame = new BigNumber(newSixteenNumber, 16)
                                                                 setCurrentFrame(newCurrentFrame)
@@ -160,8 +158,8 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl, adm
                                                             if (cellA[index] === cellA[tempIndex] && cellB[index] === cellB[tempIndex] && cellC[index] !== cellC[tempIndex] && cellD[index] === cellD[tempIndex]) {
                                                                 const chIndex = (unitNumber * unitNumber) - currentCell
                                                                 var newSixteenNumber = sixteenNumber;
-                                                                const round = (unitNumber * unitNumber)-sixteenNumber.length;
-                                                                [...Array(round)].forEach(()=>{ newSixteenNumber = '0'+newSixteenNumber })
+                                                                const round = (unitNumber * unitNumber) - sixteenNumber.length;
+                                                                [...Array(round)].forEach(() => { newSixteenNumber = '0' + newSixteenNumber })
                                                                 newSixteenNumber = newSixteenNumber.substring(0, chIndex) + tempIndex.toString(16) + newSixteenNumber.substring(chIndex + 1)
                                                                 const newCurrentFrame = new BigNumber(newSixteenNumber, 16)
                                                                 setCurrentFrame(newCurrentFrame)
@@ -174,8 +172,8 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl, adm
                                                             if (cellA[index] === cellA[tempIndex] && cellB[index] === cellB[tempIndex] && cellC[index] === cellC[tempIndex] && cellD[index] !== cellD[tempIndex]) {
                                                                 const chIndex = (unitNumber * unitNumber) - currentCell
                                                                 var newSixteenNumber = sixteenNumber;
-                                                                const round = (unitNumber * unitNumber)-sixteenNumber.length;
-                                                                [...Array(round)].forEach(()=>{ newSixteenNumber = '0'+newSixteenNumber })
+                                                                const round = (unitNumber * unitNumber) - sixteenNumber.length;
+                                                                [...Array(round)].forEach(() => { newSixteenNumber = '0' + newSixteenNumber })
                                                                 newSixteenNumber = newSixteenNumber.substring(0, chIndex) + tempIndex.toString(16) + newSixteenNumber.substring(chIndex + 1)
                                                                 const newCurrentFrame = new BigNumber(newSixteenNumber, 16)
                                                                 setCurrentFrame(newCurrentFrame)
@@ -197,7 +195,7 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl, adm
                 <div className='button' onClick={() => { setTimerFlag(false) }}>Pause</div>
                 <div className='button' onClick={() => { setCurrentFrame(new BigNumber(0)); }}>Reset</div>
             </div>
-            <div className='current-frame'>Total Frame : {totalFrame.toFixed()}</div>
+            <div className='total-frame'>Total Frame : {totalFrame.toFixed()}</div>
             <div className='slider'>
                 <div className='button' onMouseDown={() => setBackwardFlag(true)} onClick={() => {
                     var tempCurrentFrame = currentFrame.minus(frequency)
@@ -233,7 +231,11 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl, adm
                 }}
                     onMouseLeave={() => setForwardFlag(false)} onMouseUp={() => setForwardFlag(false)}>{'>>>'}</div>
             </div>
-            <div className='current-frame'>Current Frame : {currentFrame.plus(1).toFixed()}</div>
+            <div className='row-center'>
+                <input type={'checkbox'} />
+                <p>Revert on Param change |</p>
+                <div className='current-frame'>Current Frame : {currentFrame.plus(1).toFixed()}</div>
+            </div>
             <div className='go-to-frame'>
                 <p>Go To Frame</p>
                 <input type={'text'} min={1} value={inputValue} onChange={(e) => { setInputValue(e.target.value) }} />
@@ -241,7 +243,7 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl, adm
             </div>
             <div className='sliders'>
                 <div className='slider-box'>
-                <Slider value={parseInt(fps?.dividedBy(totalFrame).multipliedBy(MAX_NUM).toFixed()) || 0} onChange={(e) => {
+                    <Slider value={parseInt(fps?.dividedBy(totalFrame).multipliedBy(MAX_NUM).toFixed()) || 0} onChange={(e) => {
                         setFps(totalFrame.dividedBy(MAX_NUM - 1).multipliedBy(e.target.value - 1).plus(1).integerValue(BigNumber.ROUND_FLOOR))
                     }} step={1} min={1} max={MAX_NUM} />
                     <div className='row'>
