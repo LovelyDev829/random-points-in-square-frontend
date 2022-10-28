@@ -95,7 +95,7 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl, adm
         return () => clearTimeout(timer)
     })
 
-    function squareClickedHadle(sixteenNumber, tempIndex, currentCell) {
+    const squareClickedHadle =(sixteenNumber, tempIndex, currentCell) => {
         const chIndex = (unitNumber * unitNumber) - currentCell
         var newSixteenNumber = sixteenNumber;
         const round = (unitNumber * unitNumber) - sixteenNumber.length;
@@ -104,6 +104,7 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl, adm
         const newCurrentFrame = new BigNumber(newSixteenNumber, 16)
         setCurrentFrame(newCurrentFrame)
     }
+    const digits_only = string => [...string].every(c => '0123456789'.includes(c));
     return (
         <div className={drawFlag ? 'MainPage curser' : 'MainPage'} onMouseUp={() => {setMouseDownFlag(false); }}>
             <div className='header'>
@@ -279,7 +280,7 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl, adm
             <div className='go-to-frame'>
                 <p>Go To Frame</p>
                 <input type={'text'} min={1} value={inputValue} onChange={(e) => {
-                    if(/^[0-9\b]+$/.test(e.nativeEvent.data)) setInputValue(e.target.value)
+                    if(digits_only(e.target.value)) setInputValue(e.target.value)
                 }} />
                 <div className='button' onClick={() => { setCurrentFrame(new BigNumber(inputValue).minus(1)) }}>Go</div>
             </div>
@@ -291,7 +292,7 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl, adm
                     <div className='row'>
                         <p>Frame Speed FPS : </p>
                         <input className='long' type={'text'} value={fps.toFixed()} onChange={(e) => {
-                            if(/^[0-9\b]+$/.test(e.nativeEvent.data)) setFps(new BigNumber(e.target.value))
+                            if(digits_only(e.target.value)) setFps(new BigNumber(e.target.value))
                         }} />
                     </div>
                 </div>
@@ -317,7 +318,7 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl, adm
                     <div className='row'>
                         <p>Frequency : </p>
                         <input className='long' type={'text'} value={frequency.toFixed()} onChange={(e) => {
-                            if(/^[0-9\b]+$/.test(e.nativeEvent.data)) setFrequency(new BigNumber(e.target.value))
+                            if(digits_only(e.target.value)) setFrequency(new BigNumber(e.target.value))
                         }} />
                     </div>
                 </div>
