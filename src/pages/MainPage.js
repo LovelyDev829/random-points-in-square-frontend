@@ -29,7 +29,9 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl, adm
     const navigate = useNavigate();
     const [mouseDownFlag, setMouseDownFlag] = useState(false)
     useEffect(() => {
-        if (!loginFlag) navigate('/login');
+        if (!loginFlag){
+            navigate('/login');
+        }
     })
     useEffect(() => {
         var interval

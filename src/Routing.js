@@ -6,15 +6,27 @@ import RegisterPage from './pages/RegisterPage'
 
 function Routing() {
     const baseUrl = "https://random-points-in-square-back.herokuapp.com";
-    // const baseUrl = "http://localhost:4000";
-    const [loginFlag, setLoginFlag] = useState(false)
-    const [userInfo, setUserInfo] = useState({})
-    const [adminFlag, setAdminFlag] = useState(false)
-    useEffect(()=>{
-        if(userInfo.email === 'admin@gmail.com') setAdminFlag(true)
+    const [loginFlag, setLoginFlag] = useState(localStorage.getItem('loginFlag'))
+    const [userInfo, setUserInfo] = useState(localStorage.getItem('userInfo'))
+    const [adminFlag, setAdminFlag] = useState(localStorage.getItem('adminFlag'))
+    useEffect(() => {
+        if (userInfo?.email === 'admin@gmail.com') setAdminFlag(true)
         else setAdminFlag(false)
-    },[userInfo, adminFlag])
-    // const loginFlag = props.loginFlag;
+    }, [userInfo, adminFlag])
+    useEffect(()=>{
+        localStorage.setItem('loginFlag', loginFlag)
+    },[loginFlag]);
+    useEffect(()=>{
+        localStorage.setItem('userInfo', userInfo)
+    },[userInfo]);
+    useEffect(()=>{
+        localStorage.setItem('adminFlag', adminFlag)
+    },[adminFlag]);
+    useEffect(()=>{
+        localStorage.setItem('loginFlag', false)
+        localStorage.setItem('userInfo', {})
+        localStorage.setItem('adminFlag', false)
+    },[])
     return (
         <Router basename={process.env.PUBLIC_URL}>
             <Routes>
