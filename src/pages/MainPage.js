@@ -265,7 +265,7 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl, adm
                 <input type={'text'} min={1} value={inputValue} onChange={(e) => {
                     if (digits_only(e.target.value)) setInputValue(e.target.value)
                 }} />
-                <div className='button' onClick={() => { setCurrentFrame(new BigNumber(inputValue).minus(1)) }}>Go</div>
+                <div className='button' onClick={() => { setCurrentFrame(new BigNumber(inputValue)) }}>Go</div>
             </div>
             <div className='sliders'>
                 <div className='slider-box'>
