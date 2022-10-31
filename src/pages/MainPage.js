@@ -39,11 +39,10 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl, adm
         if (timerFlag) {
             interval = setInterval(() => {
                 var times = fps.dividedToIntegerBy(shutterFps)
-                var tempTotalFrame = currentFrame.plus(frequency.multipliedBy(times))
+                var tempTotalFrame = currentFrame.minus(1).plus(frequency.multipliedBy(times))
                 var multipleValue = tempTotalFrame.dividedToIntegerBy(totalFrame)
                 var tempCurrentFrame = tempTotalFrame.minus(totalFrame.multipliedBy(multipleValue))
-                if(times.toString() !== '1') tempCurrentFrame = tempCurrentFrame.plus(1)
-                setCurrentFrame(tempCurrentFrame)
+                setCurrentFrame(tempCurrentFrame.plus(1))
             }, (1000 / shutterFps));
         }
         else {
