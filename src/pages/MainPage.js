@@ -390,14 +390,39 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl, adm
                                     </div>
                                 </div>
                                 <div className='row'>{savedItem?.commentDateTime} {savedItem?.userName}
+                                    <div className={(userInfo._id===savedItem.userId || adminFlag)?'button':'hidden'} onClick={() => {
+                                        if (comment === '') {
+                                            alert('Please leave a comment...')
+                                            return
+                                        }
+                                        const frameObject = {
+                                            frameId: savedItem._id,
+                                            frame: currentFrame.toString(),
+                                            comment: comment,
+                                            frameFps: fps.toString(),
+                                            shutterFps: shutterFps,
+                                            frequency: frequency.toString()
+                                        };
+                                        axios.post(baseUrl + '/frame/update-frame', frameObject)
+                                            .then(res => {
+                                                if (res.data?.success) {
+                                                    setComment('')
+                                                }
+                                                else {
+                                                    alert('Already existing pattern...')
+                                                }
+                                            })
+                                            .catch((error) => { alert("There was an error...") });
+                                    }}>Update</div>
                                     <div className='button' onClick={() => {
                                         setCurrentFrame(dispFrame)
                                         setInputValue(dispFrame.plus(1))
                                         setFps(new BigNumber(savedItem?.frameFps))
                                         setShutterFps(savedItem?.shutterFps)
                                         setFrequency(new BigNumber(savedItem?.frequency))
+                                        setComment(savedItem.comment)
                                     }}>Try it</div>
-                                    <div className={adminFlag ? 'button' : 'hidden'} onClick={() => {
+                                    <div className={(userInfo._id===savedItem.userId || adminFlag)?'button':'hidden'} onClick={() => {
                                         axios.delete(baseUrl + '/frame/delete-frame/' + savedItem._id)
                                             .then(res => {
                                                 if (res.data?.success) { }
