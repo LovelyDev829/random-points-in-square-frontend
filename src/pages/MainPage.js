@@ -415,8 +415,8 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl, adm
                                             .catch((error) => { alert("There was an error...") });
                                     }}>Update</div>
                                     <div className='button' onClick={() => {
-                                        setCurrentFrame(dispFrame)
-                                        setInputValue(dispFrame.plus(1))
+                                        setCurrentFrame(dispFrame.plus(1))
+                                        setInputValue(dispFrame.plus(2))
                                         setFps(new BigNumber(savedItem?.frameFps))
                                         setShutterFps(savedItem?.shutterFps)
                                         setFrequency(new BigNumber(savedItem?.frequency))
