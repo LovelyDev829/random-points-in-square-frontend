@@ -102,7 +102,7 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl, adm
         const round = (unitNumber * unitNumber) - sixteenNumber.length;
         [...Array(round)].forEach(() => { newSixteenNumber = '0' + newSixteenNumber })
         newSixteenNumber = newSixteenNumber.substring(0, chIndex) + tempIndex.toString(16) + newSixteenNumber.substring(chIndex + 1)
-        const newCurrentFrame = new BigNumber(newSixteenNumber, 16)
+        const newCurrentFrame = new BigNumber(newSixteenNumber, 16).plus(1)
         setCurrentFrame(newCurrentFrame)
     }
     const digits_only = string => [...string].every(c => '0123456789'.includes(c));
@@ -117,9 +117,11 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl, adm
                     navigate('/login')
                 }}>logout</div>
             </div>
-            <div className={drawFlag ? 'button draw-mode' : 'button draw-mode disabled'} onClick={() => setDrawFlag(!drawFlag)}>DRAW MODE</div>
+            <div className={drawFlag ? 'button draw-mode' : 'button draw-mode disabled'} onClick={() => {
+                setDrawFlag(!drawFlag)
+            }}>DRAW MODE</div>
             <div className={drawFlag ? 'button clear' : 'button clear disabled'} onClick={() => {
-                if (drawFlag) setCurrentFrame(totalFrame.minus(1))
+                if (drawFlag) setCurrentFrame(totalFrame)
             }}>CLEAR</div>
             <div className='squares' onMouseDown={() => { setMouseDownFlag(true); }}
                 onMouseLeave={() => { setMouseDownFlag(false); }}
@@ -390,7 +392,7 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl, adm
                                     </div>
                                 </div>
                                 <div className='row'>{savedItem?.commentDateTime} {savedItem?.userName}
-                                    <div className={(userInfo._id===savedItem.userId || adminFlag)?'button':'hidden'} onClick={() => {
+                                    <div className={(userInfo._id === savedItem.userId || adminFlag) ? 'button' : 'hidden'} onClick={() => {
                                         if (comment === '') {
                                             alert('Please leave a comment...')
                                             return
@@ -422,7 +424,7 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl, adm
                                         setFrequency(new BigNumber(savedItem?.frequency))
                                         setComment(savedItem.comment)
                                     }}>Try it</div>
-                                    <div className={(userInfo._id===savedItem.userId || adminFlag)?'button':'hidden'} onClick={() => {
+                                    <div className={(userInfo._id === savedItem.userId || adminFlag) ? 'button' : 'hidden'} onClick={() => {
                                         axios.delete(baseUrl + '/frame/delete-frame/' + savedItem._id)
                                             .then(res => {
                                                 if (res.data?.success) { }
