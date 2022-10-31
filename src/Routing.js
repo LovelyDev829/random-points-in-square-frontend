@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
+import HelpPage from './pages/HelpPage'
 import LoginPage from './pages/LoginPage'
 import MainPage from './pages/MainPage'
 import RegisterPage from './pages/RegisterPage'
@@ -43,6 +44,7 @@ function Routing() {
                     loginFlag={loginFlag} setLoginFlag={setLoginFlag} userInfo={userInfo} setUserInfo={setUserInfo} baseUrl={baseUrl}
                     adminFlag={adminFlag}
                 />} />}
+                {loginFlag && <Route exact path="/help" element={<HelpPage />} />}
             </Routes>
         </Router>
     )

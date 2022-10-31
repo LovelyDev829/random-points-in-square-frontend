@@ -13,7 +13,7 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl, adm
     const cellC = [0, 0, 0, 1, 0, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0]
     const unitNumber = 8
     const totalFrame = new BigNumber(16).pow(unitNumber * unitNumber);
-    const [currentFrame, setCurrentFrame] = useState(new BigNumber(0))
+    const [currentFrame, setCurrentFrame] = useState(new BigNumber(1))
     const [timerFlag, setTimerFlag] = useState(false)
     const [inputValue, setInputValue] = useState('1')
     const [fps, setFps] = useState(new BigNumber(100))
@@ -29,7 +29,7 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl, adm
     const navigate = useNavigate();
     const [mouseDownFlag, setMouseDownFlag] = useState(false)
     useEffect(() => {
-        if (!loginFlag || !userInfo.userName){
+        if (!loginFlag || !userInfo.userName) {
             setLoginFlag(false)
             navigate('/login');
         }
@@ -69,7 +69,7 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl, adm
         else if (backwardFlag) {
             timer = setTimeout(() => {
                 tempCurrentFrame = currentFrame.minus(frequency)
-                if (tempCurrentFrame.comparedTo(0) === -1) setCurrentFrame(tempCurrentFrame.plus(totalFrame))
+                if (tempCurrentFrame.comparedTo(1) === -1) setCurrentFrame(tempCurrentFrame.plus(totalFrame))
                 else setCurrentFrame(tempCurrentFrame)
             }, 100)
         }
@@ -81,14 +81,14 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl, adm
         if (stepForwardFlag) {
             timer = setTimeout(() => {
                 tempCurrentFrame = currentFrame.plus(1)
-                if (tempCurrentFrame.comparedTo(totalFrame) === 1) setCurrentFrame(new BigNumber(0))
+                if (tempCurrentFrame.comparedTo(totalFrame) === 1) setCurrentFrame(new BigNumber(1))
                 else setCurrentFrame(tempCurrentFrame)
             }, 100)
         }
         else if (stepBackwardFlag) {
             timer = setTimeout(() => {
                 tempCurrentFrame = currentFrame.minus(1)
-                if (tempCurrentFrame.comparedTo(0) === -1) setCurrentFrame(totalFrame)
+                if (tempCurrentFrame.comparedTo(1) === -1) setCurrentFrame(totalFrame)
                 else setCurrentFrame(tempCurrentFrame)
             }, 100)
         }
@@ -96,7 +96,7 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl, adm
         return () => clearTimeout(timer)
     })
 
-    const squareClickedHadle =(sixteenNumber, tempIndex, currentCell) => {
+    const squareClickedHadle = (sixteenNumber, tempIndex, currentCell) => {
         const chIndex = (unitNumber * unitNumber) - currentCell
         var newSixteenNumber = sixteenNumber;
         const round = (unitNumber * unitNumber) - sixteenNumber.length;
@@ -107,7 +107,7 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl, adm
     }
     const digits_only = string => [...string].every(c => '0123456789'.includes(c));
     return (
-        <div className={drawFlag ? 'MainPage curser' : 'MainPage'} onMouseUp={() => {setMouseDownFlag(false); }}>
+        <div className={drawFlag ? 'MainPage curser' : 'MainPage'} onMouseUp={() => { setMouseDownFlag(false); }}>
             <div className='header'>
                 <div className='user-name'>Hi, {userInfo.userName}</div>
                 <p>THE GOD PROJECT</p>
@@ -121,12 +121,12 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl, adm
             <div className={drawFlag ? 'button clear' : 'button clear disabled'} onClick={() => {
                 if (drawFlag) setCurrentFrame(totalFrame.minus(1))
             }}>CLEAR</div>
-            <div className='squares' onMouseDown={() => {setMouseDownFlag(true); }}
-            onMouseLeave={() => {setMouseDownFlag(false); }}
-            onMouseUp={() => {setMouseDownFlag(false); }}>
+            <div className='squares' onMouseDown={() => { setMouseDownFlag(true); }}
+                onMouseLeave={() => { setMouseDownFlag(false); }}
+                onMouseUp={() => { setMouseDownFlag(false); }}>
                 {
                     [...Array(unitNumber)].map((item, firstIndex) => {
-                        var sixteenNumber = currentFrame.toString(16)
+                        var sixteenNumber = currentFrame.minus(1).toString(16)
                         return (
                             <div className='row' key={"first" + firstIndex}>
                                 {
@@ -137,9 +137,7 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl, adm
                                             <div className='unit-squares' key={"first" + secondIndex}>
                                                 <div className='row'>
                                                     <div className={cellA[index] === 1 ? 'square black' : 'square'} onMouseOver={() => {
-                                                        // console.log("over")
                                                         if (!drawFlag || !mouseDownFlag) return;
-                                                        // console.log("overr");
                                                         [...Array(unitNumber * unitNumber)].forEach((item, tempIndex) => {
                                                             if (cellA[index] !== cellA[tempIndex] && cellB[index] === cellB[tempIndex]
                                                                 && cellC[index] === cellC[tempIndex] && cellD[index] === cellD[tempIndex]) {
@@ -147,9 +145,7 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl, adm
                                                             }
                                                         })
                                                     }} onMouseDown={() => {
-                                                        // console.log("Down")
                                                         if (!drawFlag) return;
-                                                        // console.log("downn");
                                                         [...Array(unitNumber * unitNumber)].forEach((item, tempIndex) => {
                                                             if (cellA[index] !== cellA[tempIndex] && cellB[index] === cellB[tempIndex]
                                                                 && cellC[index] === cellC[tempIndex] && cellD[index] === cellD[tempIndex]) {
@@ -158,9 +154,7 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl, adm
                                                         })
                                                     }}></div>
                                                     <div className={cellB[index] === 1 ? 'square black' : 'square'} onMouseOver={() => {
-                                                        // console.log("over")
                                                         if (!drawFlag || !mouseDownFlag) return;
-                                                        // console.log("overr");
                                                         [...Array(unitNumber * unitNumber)].forEach((item, tempIndex) => {
                                                             if (cellA[index] === cellA[tempIndex] && cellB[index] !== cellB[tempIndex]
                                                                 && cellC[index] === cellC[tempIndex] && cellD[index] === cellD[tempIndex]) {
@@ -168,9 +162,7 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl, adm
                                                             }
                                                         })
                                                     }} onMouseDown={() => {
-                                                        // console.log("Down")
                                                         if (!drawFlag) return;
-                                                        // console.log("downn");
                                                         [...Array(unitNumber * unitNumber)].forEach((item, tempIndex) => {
                                                             if (cellA[index] === cellA[tempIndex] && cellB[index] !== cellB[tempIndex]
                                                                 && cellC[index] === cellC[tempIndex] && cellD[index] === cellD[tempIndex]) {
@@ -181,9 +173,7 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl, adm
                                                 </div>
                                                 <div className='row'>
                                                     <div className={cellC[index] === 1 ? 'square black' : 'square'} onMouseOver={() => {
-                                                        // console.log("over")
                                                         if (!drawFlag || !mouseDownFlag) return;
-                                                        // console.log("overr");
                                                         [...Array(unitNumber * unitNumber)].forEach((item, tempIndex) => {
                                                             if (cellA[index] === cellA[tempIndex] && cellB[index] === cellB[tempIndex]
                                                                 && cellC[index] !== cellC[tempIndex] && cellD[index] === cellD[tempIndex]) {
@@ -191,9 +181,7 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl, adm
                                                             }
                                                         })
                                                     }} onMouseDown={() => {
-                                                        // console.log("Down")
                                                         if (!drawFlag) return;
-                                                        // console.log("downn");
                                                         [...Array(unitNumber * unitNumber)].forEach((item, tempIndex) => {
                                                             if (cellA[index] === cellA[tempIndex] && cellB[index] === cellB[tempIndex]
                                                                 && cellC[index] !== cellC[tempIndex] && cellD[index] === cellD[tempIndex]) {
@@ -202,9 +190,7 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl, adm
                                                         })
                                                     }}></div>
                                                     <div className={cellD[index] === 1 ? 'square black' : 'square'} onMouseOver={() => {
-                                                        // console.log("over")
                                                         if (!drawFlag || !mouseDownFlag) return;
-                                                        // console.log("overr");
                                                         [...Array(unitNumber * unitNumber)].forEach((item, tempIndex) => {
                                                             if (cellA[index] === cellA[tempIndex] && cellB[index] === cellB[tempIndex]
                                                                 && cellC[index] === cellC[tempIndex] && cellD[index] !== cellD[tempIndex]) {
@@ -212,9 +198,7 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl, adm
                                                             }
                                                         })
                                                     }} onMouseDown={() => {
-                                                        // console.log("Down")
                                                         if (!drawFlag) return;
-                                                        // console.log("downn");
                                                         [...Array(unitNumber * unitNumber)].forEach((item, tempIndex) => {
                                                             if (cellA[index] === cellA[tempIndex] && cellB[index] === cellB[tempIndex]
                                                                 && cellC[index] === cellC[tempIndex] && cellD[index] !== cellD[tempIndex]) {
@@ -235,37 +219,33 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl, adm
             <div className='buttons'>
                 <div className='button' onClick={() => { setTimerFlag(true) }}>Start</div>
                 <div className='button' onClick={() => { setTimerFlag(false) }}>Pause</div>
-                <div className='button' onClick={() => { setCurrentFrame(new BigNumber(0)); }}>Reset</div>
+                <div className='button' onClick={() => { setCurrentFrame(new BigNumber(1)); }}>Reset</div>
             </div>
             <div className='total-frame'>Total Frame : {totalFrame.toFixed()}</div>
             <div className='slider'>
                 <div className='button' onMouseDown={() => setBackwardFlag(true)} onClick={() => {
                     var tempCurrentFrame = currentFrame.minus(frequency)
-                    if (tempCurrentFrame.comparedTo(0) === -1) setCurrentFrame(tempCurrentFrame.plus(totalFrame))
+                    if (tempCurrentFrame.comparedTo(1) === -1) setCurrentFrame(tempCurrentFrame.plus(totalFrame))
                     else setCurrentFrame(tempCurrentFrame)
                 }}
                     onMouseLeave={() => setBackwardFlag(false)} onMouseUp={() => setBackwardFlag(false)}>{'<<<'}</div>
-
                 <div className='button left' onMouseDown={() => setStepBackwardFlag(true)}
                     onMouseLeave={() => setStepBackwardFlag(false)} onMouseUp={() => setStepBackwardFlag(false)}
                     onClick={() => {
                         var tempCurrentFrame = currentFrame.minus(1)
-                        if (tempCurrentFrame.comparedTo(0) === -1) setCurrentFrame(totalFrame)
+                        if (tempCurrentFrame.comparedTo(1) === -1) setCurrentFrame(totalFrame)
                         else setCurrentFrame(tempCurrentFrame)
                     }}>{'<'}</div>
-
-                <Slider step={1} min={1} max={MAX_NUM} value={parseInt(currentFrame.dividedBy(totalFrame).multipliedBy(MAX_NUM).toFixed())} onChange={(e) => {
-                    setCurrentFrame(totalFrame.dividedBy(MAX_NUM - 1).multipliedBy(e.target.value - 1).integerValue(BigNumber.ROUND_FLOOR))
+                <Slider step={0.01} min={0} max={MAX_NUM} value={parseInt(currentFrame.dividedBy(totalFrame).multipliedBy(MAX_NUM).toFixed())} onChange={(e) => {
+                    setCurrentFrame(totalFrame.minus(1).dividedBy(MAX_NUM).multipliedBy(e.target.value).integerValue(BigNumber.ROUND_CEIL).plus(1))
                 }} />
-
                 <div className='button right' onMouseDown={() => setStepForwardFlag(true)}
                     onMouseLeave={() => setStepForwardFlag(false)} onMouseUp={() => setStepForwardFlag(false)}
                     onClick={() => {
                         var tempCurrentFrame = currentFrame.plus(1)
-                        if (tempCurrentFrame.comparedTo(totalFrame) === 1) setCurrentFrame(new BigNumber(0))
+                        if (tempCurrentFrame.comparedTo(totalFrame) === 1) setCurrentFrame(new BigNumber(1))
                         else setCurrentFrame(tempCurrentFrame)
                     }}>{'>'}</div>
-
                 <div className='button' onMouseDown={() => setForwardFlag(true)} onClick={() => {
                     var tempCurrentFrame = currentFrame.plus(frequency)
                     if (tempCurrentFrame.comparedTo(totalFrame) === 1) setCurrentFrame(tempCurrentFrame.minus(totalFrame))
@@ -276,24 +256,24 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl, adm
             <div className='row-center'>
                 <input type={'checkbox'} />
                 <p>Revert on Param change |</p>
-                <div className='current-frame'>Current Frame : {currentFrame.plus(1).toFixed()}</div>
+                <div className='current-frame'>Current Frame : {currentFrame.toFixed()}</div>
             </div>
             <div className='go-to-frame'>
                 <p>Go To Frame</p>
                 <input type={'text'} min={1} value={inputValue} onChange={(e) => {
-                    if(digits_only(e.target.value)) setInputValue(e.target.value)
+                    if (digits_only(e.target.value)) setInputValue(e.target.value)
                 }} />
                 <div className='button' onClick={() => { setCurrentFrame(new BigNumber(inputValue).minus(1)) }}>Go</div>
             </div>
             <div className='sliders'>
                 <div className='slider-box'>
-                    <Slider value={parseInt(fps?.dividedBy(totalFrame).multipliedBy(MAX_NUM).toFixed()) || 0} onChange={(e) => {
-                        setFps(totalFrame.dividedBy(MAX_NUM - 1).multipliedBy(e.target.value - 1).plus(1).integerValue(BigNumber.ROUND_FLOOR))
-                    }} step={1} min={1} max={MAX_NUM} />
+                    <Slider step={1} min={0} max={MAX_NUM} value={parseInt(fps.dividedBy(totalFrame).multipliedBy(MAX_NUM).toFixed())} onChange={(e) => {
+                        setFps(totalFrame.minus(1).dividedBy(MAX_NUM).multipliedBy(e.target.value).integerValue(BigNumber.ROUND_CEIL).plus(1))
+                    }} />
                     <div className='row'>
                         <p>Frame Speed FPS : </p>
                         <input className='long' type={'text'} value={fps.toFixed()} onChange={(e) => {
-                            if(digits_only(e.target.value)) setFps(new BigNumber(e.target.value))
+                            if (digits_only(e.target.value)) setFps(new BigNumber(e.target.value))
                         }} />
                     </div>
                 </div>
@@ -313,20 +293,20 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl, adm
                     </div>
                 </div>
                 <div className='slider-box'>
-                    <Slider value={parseInt(frequency?.dividedBy(totalFrame).multipliedBy(MAX_NUM).toFixed()) || 0} onChange={(e) => {
-                        setFrequency(totalFrame.dividedBy(MAX_NUM - 1).multipliedBy(e.target.value - 1).plus(1).integerValue(BigNumber.ROUND_FLOOR))
-                    }} step={1} min={1} max={MAX_NUM} />
+                    <Slider step={1} min={0} max={MAX_NUM} value={parseInt(frequency.dividedBy(totalFrame).multipliedBy(MAX_NUM).toFixed())} onChange={(e) => {
+                        setFrequency(totalFrame.minus(1).dividedBy(MAX_NUM).multipliedBy(e.target.value).integerValue(BigNumber.ROUND_CEIL).plus(1))
+                    }} />
                     <div className='row'>
                         <p>Frequency : </p>
                         <input className='long' type={'text'} value={frequency.toFixed()} onChange={(e) => {
-                            if(digits_only(e.target.value)) setFrequency(new BigNumber(e.target.value))
+                            if (digits_only(e.target.value)) setFrequency(new BigNumber(e.target.value))
                         }} />
                     </div>
                 </div>
             </div>
             <div className='reset-all'>
                 <div className='button' onClick={() => {
-                    setCurrentFrame(new BigNumber(0));
+                    setCurrentFrame(new BigNumber(1));
                     setInputValue(0);
                     setTimerFlag(false);
                     setFps(100)
@@ -370,7 +350,7 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl, adm
             <div className='saved-items'>
                 {
                     savedData?.map((savedItem, savedIndex) => {
-                        const dispFrame = new BigNumber(savedItem?.frame)
+                        const dispFrame = new BigNumber(savedItem?.frame).minus(1)
                         return (
                             <div className='saved-item' key={"saved-item-" + savedIndex}>
                                 <div className='row'>
