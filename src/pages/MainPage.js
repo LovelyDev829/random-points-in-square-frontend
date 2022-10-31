@@ -42,6 +42,7 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl, adm
                 var tempTotalFrame = currentFrame.plus(frequency.multipliedBy(times))
                 var multipleValue = tempTotalFrame.dividedToIntegerBy(totalFrame)
                 var tempCurrentFrame = tempTotalFrame.minus(totalFrame.multipliedBy(multipleValue))
+                if(times.toString() !== '1') tempCurrentFrame = tempCurrentFrame.plus(1)
                 setCurrentFrame(tempCurrentFrame)
             }, (1000 / shutterFps));
         }
