@@ -299,11 +299,13 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl, adm
                                 var tempFps = fps.plus(1)
                                 if (tempFps.comparedTo(totalFrame) === 1) tempFps = new BigNumber(1)
                                 setFps(tempFps)
+                                if(revertCheckFlag) setCurrentFrame(new BigNumber(inputValue))
                             }} />
                             <DownIcon onClick={() => {
                                 var tempFps = fps.minus(1)
                                 if (tempFps.comparedTo(1) === -1) tempFps = totalFrame
                                 setFps(tempFps)
+                                if(revertCheckFlag) setCurrentFrame(new BigNumber(inputValue))
                             }} />
                         </div>
                     </div>
@@ -340,11 +342,13 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl, adm
                                 var tempFrequency = frequency.plus(1)
                                 if (tempFrequency.comparedTo(totalFrame) === 1) tempFrequency = new BigNumber(1)
                                 setFrequency(tempFrequency)
+                                if(revertCheckFlag) setCurrentFrame(new BigNumber(inputValue))
                             }} />
                             <DownIcon onClick={() => {
                                 var tempFrequency = frequency.minus(1)
                                 if (tempFrequency.comparedTo(1) === -1) tempFrequency = totalFrame
                                 setFrequency(tempFrequency)
+                                if(revertCheckFlag) setCurrentFrame(new BigNumber(inputValue))
                             }} />
                         </div>
                     </div>
@@ -371,13 +375,13 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl, adm
                             return
                         }
                         const frameObject = {
-                            frame: currentFrame.toString(),
+                            frame: currentFrame.toFixed(),
                             comment: comment,
                             userId: userInfo._id,
                             userName: userInfo.userName,
-                            frameFps: fps.toString(),
+                            frameFps: fps.toFixed(),
                             shutterFps: shutterFps,
-                            frequency: frequency.toString()
+                            frequency: frequency.toFixed()
                         };
                         axios.post(baseUrl + '/frame/create-frame', frameObject)
                             .then(res => {
@@ -443,11 +447,11 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl, adm
                                         }
                                         const frameObject = {
                                             frameId: savedItem._id,
-                                            frame: currentFrame.toString(),
+                                            frame: currentFrame.toFixed(),
                                             comment: comment,
-                                            frameFps: fps.toString(),
+                                            frameFps: fps.toFixed(),
                                             shutterFps: shutterFps,
-                                            frequency: frequency.toString()
+                                            frequency: frequency.toFixed()
                                         };
                                         axios.post(baseUrl + '/frame/update-frame', frameObject)
                                             .then(res => {
