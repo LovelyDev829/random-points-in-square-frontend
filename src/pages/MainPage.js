@@ -25,7 +25,7 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl, adm
     const totalFrame = new BigNumber(16).pow(unitNumber * unitNumber);
     const [currentFrame, setCurrentFrame] = useState(new BigNumber(1))
     const [timerFlag, setTimerFlag] = useState(false)
-    const [inputValue, setInputValue] = useState('1')
+    const [inputValue, setInputValue] = useState(new BigNumber(1))
     const [fps, setFps] = useState(new BigNumber(100))
     const [shutterFps, setShutterFps] = useState(50)
     const [frequency, setFrequency] = useState(new BigNumber(1))
@@ -275,18 +275,18 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl, adm
             </div>
             <div className='go-to-frame'>
                 <p>Go To Frame</p>
-                <textarea type={'text'} min={1} value={inputValue} onChange={(e) => {
+                <textarea type={'text'} min={1} value={inputValue.toFixed()} onChange={(e) => {
                     console.log(e.target.scrollHeight)
                     e.target.style.height = `${e.target.scrollHeight}px`;
-                    if (digits_only(e.target.value)) setInputValue(e.target.value)
+                    if (digits_only(e.target.value)) setInputValue(new BigNumber(e.target.value))
                 }} />
-                <div className='button' onClick={() => { setCurrentFrame(new BigNumber(inputValue)) }}>Go</div>
+                <div className='button' onClick={() => { setCurrentFrame(inputValue) }}>Go</div>
             </div>
             <div className='sliders'>
                 <div className='slider-box'>
                     <Slider step={1} min={0} max={MAX_NUM} value={parseInt(fps.dividedBy(totalFrame).multipliedBy(MAX_NUM).toFixed())} onChange={(e) => {
                         setFps(totalFrame.minus(1).dividedBy(MAX_NUM).multipliedBy(e.target.value).integerValue(BigNumber.ROUND_CEIL).plus(1))
-                        if(revertCheckFlag) setCurrentFrame(new BigNumber(inputValue))
+                        if(revertCheckFlag) setCurrentFrame(inputValue)
                     }} />
                     <div className='row'>
                         <p>Frame Speed FPS : </p>
@@ -299,13 +299,13 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl, adm
                                 var tempFps = fps.plus(1)
                                 if (tempFps.comparedTo(totalFrame) === 1) tempFps = new BigNumber(1)
                                 setFps(tempFps)
-                                if(revertCheckFlag) setCurrentFrame(new BigNumber(inputValue))
+                                if(revertCheckFlag) setCurrentFrame(inputValue)
                             }} />
                             <DownIcon onClick={() => {
                                 var tempFps = fps.minus(1)
                                 if (tempFps.comparedTo(1) === -1) tempFps = totalFrame
                                 setFps(tempFps)
-                                if(revertCheckFlag) setCurrentFrame(new BigNumber(inputValue))
+                                if(revertCheckFlag) setCurrentFrame(inputValue)
                             }} />
                         </div>
                     </div>
@@ -315,7 +315,7 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl, adm
                         var tempValue = e.target.value
                         setShutterFps(tempValue)
                         if (fps.comparedTo(tempValue) === -1) setFps(new BigNumber(tempValue))
-                        if(revertCheckFlag) setCurrentFrame(new BigNumber(inputValue))
+                        if(revertCheckFlag) setCurrentFrame(inputValue)
                     }} step={1} min={1} max={120} />
                     <div className='row'>
                         <p>Shutter Speed FPS : </p>
@@ -329,7 +329,7 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl, adm
                 <div className='slider-box'>
                     <Slider step={1} min={0} max={MAX_NUM} value={parseInt(frequency.dividedBy(totalFrame).multipliedBy(MAX_NUM).toFixed())} onChange={(e) => {
                         setFrequency(totalFrame.minus(1).dividedBy(MAX_NUM).multipliedBy(e.target.value).integerValue(BigNumber.ROUND_CEIL).plus(1))
-                        if(revertCheckFlag) setCurrentFrame(new BigNumber(inputValue))
+                        if(revertCheckFlag) setCurrentFrame(inputValue)
                     }} />
                     <div className='row'>
                         <p>Frequency : </p>
@@ -342,13 +342,13 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl, adm
                                 var tempFrequency = frequency.plus(1)
                                 if (tempFrequency.comparedTo(totalFrame) === 1) tempFrequency = new BigNumber(1)
                                 setFrequency(tempFrequency)
-                                if(revertCheckFlag) setCurrentFrame(new BigNumber(inputValue))
+                                if(revertCheckFlag) setCurrentFrame(inputValue)
                             }} />
                             <DownIcon onClick={() => {
                                 var tempFrequency = frequency.minus(1)
                                 if (tempFrequency.comparedTo(1) === -1) tempFrequency = totalFrame
                                 setFrequency(tempFrequency)
-                                if(revertCheckFlag) setCurrentFrame(new BigNumber(inputValue))
+                                if(revertCheckFlag) setCurrentFrame(inputValue)
                             }} />
                         </div>
                     </div>
@@ -357,7 +357,7 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl, adm
             <div className='reset-all'>
                 <div className='button' onClick={() => {
                     setCurrentFrame(new BigNumber(1));
-                    setInputValue(0);
+                    setInputValue(new BigNumber(1));
                     setTimerFlag(false);
                     setFps(100)
                     setFrequency(new BigNumber(1))
@@ -383,6 +383,7 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl, adm
                             shutterFps: shutterFps,
                             frequency: frequency.toFixed()
                         };
+                        console.log(frameObject)
                         axios.post(baseUrl + '/frame/create-frame', frameObject)
                             .then(res => {
                                 if (res.data?.success) {
