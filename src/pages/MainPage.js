@@ -3,6 +3,16 @@ import { useNavigate } from 'react-router-dom';
 import Slider from '@mui/material/Slider';
 import BigNumber from "bignumber.js";
 import axios from 'axios';
+// import { ReactComponent as LeftIcon } from "../assets/left.svg";
+// import { ReactComponent as RightIcon } from "../assets/right.svg";
+import { ReactComponent as UpIcon } from "../assets/up.svg";
+import { ReactComponent as DownIcon } from "../assets/down.svg";
+// import { ReactComponent as LeftLeftIcon } from "../assets/left-left.svg";
+// import { ReactComponent as RightRightIcon } from "../assets/right-right.svg";
+// import { ReactComponent as UpUpIcon } from "../assets/up-up.svg";
+// import { ReactComponent as DownDownIcon } from "../assets/down-down.svg";
+// import { ReactComponent as ToggleLeftIcon } from "../assets/toggle-left.svg";
+// import { ReactComponent as ToggleRightIcon } from "../assets/toggle-right.svg";
 
 const MAX_NUM = Number.MAX_SAFE_INTEGER
 
@@ -28,6 +38,7 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl, adm
     const [savedData, setSavedData] = useState([])
     const navigate = useNavigate();
     const [mouseDownFlag, setMouseDownFlag] = useState(false)
+    const [revertCheckFlag, setRevertCheckFalg] = useState(false)
     useEffect(() => {
         if (!loginFlag || !userInfo.userName) {
             setLoginFlag(false)
@@ -105,7 +116,7 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl, adm
         const newCurrentFrame = new BigNumber(newSixteenNumber, 16).plus(1)
         setCurrentFrame(newCurrentFrame)
     }
-    const digits_only = string => [...string].every(c => '0123456789'.includes(c));
+    const digits_only = (string) => { return /^\d+$/.test(string)};
     return (
         <div className={drawFlag ? 'MainPage curser' : 'MainPage'} onMouseUp={() => { setMouseDownFlag(false); }}>
             <div className='header'>
@@ -256,13 +267,17 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl, adm
                     onMouseLeave={() => setForwardFlag(false)} onMouseUp={() => setForwardFlag(false)}>{'>>>'}</div>
             </div>
             <div className='row-center'>
-                <input type={'checkbox'} />
+                <input type={'checkbox'} defaultChecked={revertCheckFlag} onChange={(e)=>{
+                    setRevertCheckFalg(!revertCheckFlag)
+                }}/>
                 <p>Revert on Param change |</p>
                 <div className='current-frame'>Current Frame : {currentFrame.toFixed()}</div>
             </div>
             <div className='go-to-frame'>
                 <p>Go To Frame</p>
-                <input type={'text'} min={1} value={inputValue} onChange={(e) => {
+                <textarea type={'text'} min={1} value={inputValue} onChange={(e) => {
+                    console.log(e.target.scrollHeight)
+                    e.target.style.height = `${e.target.scrollHeight}px`;
                     if (digits_only(e.target.value)) setInputValue(e.target.value)
                 }} />
                 <div className='button' onClick={() => { setCurrentFrame(new BigNumber(inputValue)) }}>Go</div>
@@ -271,12 +286,26 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl, adm
                 <div className='slider-box'>
                     <Slider step={1} min={0} max={MAX_NUM} value={parseInt(fps.dividedBy(totalFrame).multipliedBy(MAX_NUM).toFixed())} onChange={(e) => {
                         setFps(totalFrame.minus(1).dividedBy(MAX_NUM).multipliedBy(e.target.value).integerValue(BigNumber.ROUND_CEIL).plus(1))
+                        if(revertCheckFlag) setCurrentFrame(new BigNumber(inputValue))
                     }} />
                     <div className='row'>
                         <p>Frame Speed FPS : </p>
-                        <input className='long' type={'text'} value={fps.toFixed()} onChange={(e) => {
+                        <textarea type={'text'} value={fps.toFixed()} onChange={(e) => {
+                            e.target.style.height = `${e.target.scrollHeight}px`;
                             if (digits_only(e.target.value)) setFps(new BigNumber(e.target.value))
                         }} />
+                        <div className='nano-buttons'>
+                            <UpIcon onClick={() => {
+                                var tempFps = fps.plus(1)
+                                if (tempFps.comparedTo(totalFrame) === 1) tempFps = new BigNumber(1)
+                                setFps(tempFps)
+                            }} />
+                            <DownIcon onClick={() => {
+                                var tempFps = fps.minus(1)
+                                if (tempFps.comparedTo(1) === -1) tempFps = totalFrame
+                                setFps(tempFps)
+                            }} />
+                        </div>
                     </div>
                 </div>
                 <div className='slider-box'>
@@ -284,6 +313,7 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl, adm
                         var tempValue = e.target.value
                         setShutterFps(tempValue)
                         if (fps.comparedTo(tempValue) === -1) setFps(new BigNumber(tempValue))
+                        if(revertCheckFlag) setCurrentFrame(new BigNumber(inputValue))
                     }} step={1} min={1} max={120} />
                     <div className='row'>
                         <p>Shutter Speed FPS : </p>
@@ -297,12 +327,26 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl, adm
                 <div className='slider-box'>
                     <Slider step={1} min={0} max={MAX_NUM} value={parseInt(frequency.dividedBy(totalFrame).multipliedBy(MAX_NUM).toFixed())} onChange={(e) => {
                         setFrequency(totalFrame.minus(1).dividedBy(MAX_NUM).multipliedBy(e.target.value).integerValue(BigNumber.ROUND_CEIL).plus(1))
+                        if(revertCheckFlag) setCurrentFrame(new BigNumber(inputValue))
                     }} />
                     <div className='row'>
                         <p>Frequency : </p>
-                        <input className='long' type={'text'} value={frequency.toFixed()} onChange={(e) => {
+                        <textarea type={'text'} value={frequency.toFixed()} onChange={(e) => {
+                            e.target.style.height = `${e.target.scrollHeight}px`;
                             if (digits_only(e.target.value)) setFrequency(new BigNumber(e.target.value))
                         }} />
+                        <div className='nano-buttons'>
+                            <UpIcon onClick={() => {
+                                var tempFrequency = frequency.plus(1)
+                                if (tempFrequency.comparedTo(totalFrame) === 1) tempFrequency = new BigNumber(1)
+                                setFrequency(tempFrequency)
+                            }} />
+                            <DownIcon onClick={() => {
+                                var tempFrequency = frequency.minus(1)
+                                if (tempFrequency.comparedTo(1) === -1) tempFrequency = totalFrame
+                                setFrequency(tempFrequency)
+                            }} />
+                        </div>
                     </div>
                 </div>
             </div>
