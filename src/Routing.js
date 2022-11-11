@@ -6,8 +6,8 @@ import MainPage from './pages/MainPage'
 import RegisterPage from './pages/RegisterPage'
 
 function Routing() {
-    const baseUrl = "https://random-points-in-square-back.herokuapp.com";
-    // const baseUrl = "http://localhost:4000";
+    // const baseUrl = "https://random-points-in-square-back.herokuapp.com";
+    const baseUrl = "http://localhost:4000";
     const [loginFlag, setLoginFlag] = useState(localStorage.getItem('loginFlag'))
     const [userInfo, setUserInfo] = useState(localStorage.getItem('userInfo'))
     const [adminFlag, setAdminFlag] = useState(localStorage.getItem('adminFlag'))

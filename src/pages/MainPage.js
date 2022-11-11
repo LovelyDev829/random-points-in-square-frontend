@@ -13,6 +13,10 @@ import { ReactComponent as DownIcon } from "../assets/down.svg";
 // import { ReactComponent as DownDownIcon } from "../assets/down-down.svg";
 // import { ReactComponent as ToggleLeftIcon } from "../assets/toggle-left.svg";
 // import { ReactComponent as ToggleRightIcon } from "../assets/toggle-right.svg";
+import { GoogleLogout } from 'react-google-login';
+
+// const clientId = '707788443358-u05p46nssla3l8tmn58tpo9r5sommgks.apps.googleusercontent.com'
+const clientId = '316927714071-82f8g7ba69432r076iu34aq9o142633r.apps.googleusercontent.com'
 
 const MAX_NUM = Number.MAX_SAFE_INTEGER
 
@@ -116,7 +120,12 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl, adm
         const newCurrentFrame = new BigNumber(newSixteenNumber, 16).plus(1)
         setCurrentFrame(newCurrentFrame)
     }
-    const digits_only = (string) => { return /^\d+$/.test(string)};
+    const digits_only = (string) => { return /^\d+$/.test(string) };
+    const onLogout = () => {
+        console.log('Logout made successfully');
+        // alert('Logout made successfully ✌');
+        setLoginFlag(false)
+    };
     return (
         <div className={drawFlag ? 'MainPage curser' : 'MainPage'} onMouseUp={() => { setMouseDownFlag(false); }}>
             <div className='header'>
@@ -126,7 +135,11 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl, adm
                     setLoginFlag(false)
                     setUserInfo({})
                     navigate('/login')
-                }}>logout</div>
+                }}><GoogleLogout
+                    clientId={clientId}
+                    buttonText="Logout"
+                    onLogoutSuccess={onLogout}
+                ></GoogleLogout></div>
             </div>
             <div className={drawFlag ? 'button draw-mode' : 'button draw-mode disabled'} onClick={() => {
                 setDrawFlag(!drawFlag)
@@ -267,9 +280,9 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl, adm
                     onMouseLeave={() => setForwardFlag(false)} onMouseUp={() => setForwardFlag(false)}>{'>>>'}</div>
             </div>
             <div className='row-center'>
-                <input type={'checkbox'} defaultChecked={revertCheckFlag} onChange={(e)=>{
+                <input type={'checkbox'} defaultChecked={revertCheckFlag} onChange={(e) => {
                     setRevertCheckFalg(!revertCheckFlag)
-                }}/>
+                }} />
                 <p>Revert on Param change |</p>
                 <div className='current-frame'>Current Frame : {currentFrame.toFixed()}</div>
             </div>
@@ -286,7 +299,7 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl, adm
                 <div className='slider-box'>
                     <Slider step={1} min={0} max={MAX_NUM} value={parseInt(fps.dividedBy(totalFrame).multipliedBy(MAX_NUM).toFixed())} onChange={(e) => {
                         setFps(totalFrame.minus(1).dividedBy(MAX_NUM).multipliedBy(e.target.value).integerValue(BigNumber.ROUND_CEIL).plus(1))
-                        if(revertCheckFlag) setCurrentFrame(inputValue)
+                        if (revertCheckFlag) setCurrentFrame(inputValue)
                     }} />
                     <div className='row'>
                         <p>Frame Speed FPS : </p>
@@ -299,13 +312,13 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl, adm
                                 var tempFps = fps.plus(1)
                                 if (tempFps.comparedTo(totalFrame) === 1) tempFps = new BigNumber(1)
                                 setFps(tempFps)
-                                if(revertCheckFlag) setCurrentFrame(inputValue)
+                                if (revertCheckFlag) setCurrentFrame(inputValue)
                             }} />
                             <DownIcon onClick={() => {
                                 var tempFps = fps.minus(1)
                                 if (tempFps.comparedTo(1) === -1) tempFps = totalFrame
                                 setFps(tempFps)
-                                if(revertCheckFlag) setCurrentFrame(inputValue)
+                                if (revertCheckFlag) setCurrentFrame(inputValue)
                             }} />
                         </div>
                     </div>
@@ -315,7 +328,7 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl, adm
                         var tempValue = e.target.value
                         setShutterFps(tempValue)
                         if (fps.comparedTo(tempValue) === -1) setFps(new BigNumber(tempValue))
-                        if(revertCheckFlag) setCurrentFrame(inputValue)
+                        if (revertCheckFlag) setCurrentFrame(inputValue)
                     }} step={1} min={1} max={120} />
                     <div className='row'>
                         <p>Shutter Speed FPS : </p>
@@ -329,7 +342,7 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl, adm
                 <div className='slider-box'>
                     <Slider step={1} min={0} max={MAX_NUM} value={parseInt(frequency.dividedBy(totalFrame).multipliedBy(MAX_NUM).toFixed())} onChange={(e) => {
                         setFrequency(totalFrame.minus(1).dividedBy(MAX_NUM).multipliedBy(e.target.value).integerValue(BigNumber.ROUND_CEIL).plus(1))
-                        if(revertCheckFlag) setCurrentFrame(inputValue)
+                        if (revertCheckFlag) setCurrentFrame(inputValue)
                     }} />
                     <div className='row'>
                         <p>Frequency : </p>
@@ -342,13 +355,13 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl, adm
                                 var tempFrequency = frequency.plus(1)
                                 if (tempFrequency.comparedTo(totalFrame) === 1) tempFrequency = new BigNumber(1)
                                 setFrequency(tempFrequency)
-                                if(revertCheckFlag) setCurrentFrame(inputValue)
+                                if (revertCheckFlag) setCurrentFrame(inputValue)
                             }} />
                             <DownIcon onClick={() => {
                                 var tempFrequency = frequency.minus(1)
                                 if (tempFrequency.comparedTo(1) === -1) tempFrequency = totalFrame
                                 setFrequency(tempFrequency)
-                                if(revertCheckFlag) setCurrentFrame(inputValue)
+                                if (revertCheckFlag) setCurrentFrame(inputValue)
                             }} />
                         </div>
                     </div>
