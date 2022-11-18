@@ -1,28 +1,44 @@
+@font-face {
+    font-family: Macondo-Regular;
+    src: url("./assets/fonts/Macondo-Regular.ttf");
+}
+
 .App {
     // width: fit-content;
     margin: auto;
     text-align: center;
-    font-family: 'Circular-Loom';
+    font-family: 'system-ui';
     font-weight: 600;
 
     .LoginPage {
         width: fit-content;
         padding: 0px 15px 0px 15px;
         margin: auto;
-        margin-top: 20vh;
+        margin-top: 5vh;
         box-sizing: border-box;
         text-align: center;
 
+        .top-title {
+            font-family: 'Macondo-Regular';
+            margin: 0px 0px 20px 0px;
+            font-size: 50px;
+        }
+
+        img {
+            width: 250px;
+            height: 250px;
+        }
+
         .title {
-            font-size: 40px;
+            font-size: 30px;
             font-weight: 500;
             margin: 0px;
-            padding-bottom: 10px;
         }
 
         .input-item {
-            width: 100%;
-            padding: 10px 30px 10px 30px;
+            width: 80%;
+            margin: auto;
+            // padding: 10px 30px 10px 30px;
             box-sizing: border-box;
             text-align: left;
 
@@ -30,7 +46,7 @@
                 font-size: 25px;
                 margin: 0px;
                 padding-left: 10px;
-                padding-bottom: 5px;
+                padding-bottom: 2px;
                 font-weight: 500;
             }
 
@@ -67,12 +83,13 @@
             padding: 10px 0px 10px 0px;
             width: 80%;
             margin: auto;
-            margin-top: 20px;
+            margin-top: 10px;
         }
 
         .forgot-password {
             font-size: 20px;
             cursor: pointer;
+            margin: 5px 0px 0px 0px;
 
             &:hover {
                 color: rgb(39, 147, 254);
@@ -80,7 +97,7 @@
         }
 
         button {
-            margin-top: 20px;
+            margin-top: 10px;
             width: 80%;
             color: black !important;
             border: 1px solid black !important;
@@ -181,7 +198,7 @@
     .MainPage {
         font-size: 20px;
         position: relative;
-        padding-bottom: 100px;
+        // padding-bottom: 100px;
 
         &.curser {
             cursor: pointer;
@@ -211,6 +228,7 @@
             }
 
             p {
+                font-family: 'Macondo-Regular';
                 margin: 0px;
                 width: fit-content;
                 margin: auto;
@@ -345,9 +363,11 @@
                             cursor: pointer;
                             width: 30px;
                             height: 30px;
+
                             &:hover {
                                 color: rgb(39, 147, 254);
                             }
+
                             // &:first-child{
                             //     margin-bottom: 10px;
                             // }
@@ -513,12 +533,39 @@
 
                 &>.row:nth-child(2) {
                     justify-content: end;
-                    padding: 5px 0px 5px 0px;
+                    padding: 5px 0px 5px 100px;
+                    justify-content: space-between;
+                    align-items: center;
 
-                    .button {
-                        margin: 0px 0px 0px 20px;
-                        padding: 5px 20px 5px 20px;
-                        width: fit-content;
+                    p {
+                        margin: 0px;
+                    }
+
+                    .svg-icons {
+                        display: flex;
+                        align-items: center;
+
+                        .svg-icon-container {
+                            position: relative;
+                            align-items: center;
+
+                            .svg-icon {
+                                color: rgb(27, 89, 195);
+                                margin: 0px 5px 0px 5px;
+                                height: 100%;
+                                cursor: pointer;
+                            }
+
+                            .hover-up {
+                                position: absolute;
+                                bottom: 36px;
+                                min-width: 60px;
+                                background-color: rgb(187, 187, 187);
+                                padding: 2px 20px 5px 20px;
+                                left: -34px;
+                                border-radius: 5px;
+                            }
+                        }
                     }
                 }
             }
@@ -550,24 +597,35 @@
             background-color: rgb(27, 89, 195);
         }
 
-        &.draw-mode {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-        }
-
         &.disabled {
             background-color: rgb(100, 119, 153);
+        }
 
-            // &:hover {
-            //     background-color: rgb(27, 89, 195);
-            // }
+        &.draw-mode {
+            position: absolute;
+            top: 125px;
+            left: calc(50vw - 417px);
         }
 
         &.clear {
             position: absolute;
-            top: 10px;
-            right: 10px;
+            top: 185px;
+            left: calc(50vw - 417px);
+        }
+
+        &.donate {
+            position: absolute;
+            top: 125px;
+            height: 80px;
+            line-height: 70px;
+            right: calc(50vw - 417px);
+            background-color: #ffc43a;
+            color: #121661;
+            align-items: center;
+
+            &:hover {
+                background-color: #ffc43ac0;
+            }
         }
     }
 

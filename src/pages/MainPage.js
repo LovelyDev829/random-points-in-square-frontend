@@ -1,26 +1,24 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom';
 import Slider from '@mui/material/Slider';
 import BigNumber from "bignumber.js";
 import axios from 'axios';
-// import { ReactComponent as LeftIcon } from "../assets/left.svg";
-// import { ReactComponent as RightIcon } from "../assets/right.svg";
-import { ReactComponent as UpIcon } from "../assets/up.svg";
-import { ReactComponent as DownIcon } from "../assets/down.svg";
-// import { ReactComponent as LeftLeftIcon } from "../assets/left-left.svg";
-// import { ReactComponent as RightRightIcon } from "../assets/right-right.svg";
-// import { ReactComponent as UpUpIcon } from "../assets/up-up.svg";
-// import { ReactComponent as DownDownIcon } from "../assets/down-down.svg";
-// import { ReactComponent as ToggleLeftIcon } from "../assets/toggle-left.svg";
-// import { ReactComponent as ToggleRightIcon } from "../assets/toggle-right.svg";
 import { GoogleLogout } from 'react-google-login';
 
-// const clientId = '707788443358-u05p46nssla3l8tmn58tpo9r5sommgks.apps.googleusercontent.com'
-const clientId = '316927714071-82f8g7ba69432r076iu34aq9o142633r.apps.googleusercontent.com'
+import { MAX_NUM, CLIENT_ID, BASE_URL } from '../utils/Constants'
 
-const MAX_NUM = Number.MAX_SAFE_INTEGER
+import { ReactComponent as UpIcon } from "../assets/svgs/up.svg";
+import { ReactComponent as DownIcon } from "../assets/svgs/down.svg";
+import { ReactComponent as PlayIcon } from "../assets/svgs/play.svg";
+import { ReactComponent as LinkIcon } from "../assets/svgs/link.svg";
+import { ReactComponent as FacebookIcon } from "../assets/svgs/facebook.svg";
+import { ReactComponent as TrashIcon } from "../assets/svgs/trash.svg";
+import { ReactComponent as RefreshIcon } from "../assets/svgs/refresh.svg";
+// import { ReactComponent as ToggleLeftIcon } from "../assets/svgs/toggle-left.svg";
+// import { ReactComponent as ToggleRightIcon } from "../assets/svgs/toggle-right.svg";
+import html2canvas from "html2canvas";
 
-function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl, adminFlag }) {
+function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, adminFlag }) {
     const cellA = [1, 0, 0, 0, 1, 0, 0, 1, 0, 1, 1, 1, 0, 1, 1, 0]
     const cellB = [0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0]
     const cellD = [0, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 1, 1, 0]
@@ -43,12 +41,38 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl, adm
     const navigate = useNavigate();
     const [mouseDownFlag, setMouseDownFlag] = useState(false)
     const [revertCheckFlag, setRevertCheckFalg] = useState(false)
+    const [jumpFlag, setJumpFlag] = useState(true)
+    const bottomRef = useRef(null);
+    const topRef = useRef(null);
+    const exportRef = useRef();
+
     useEffect(() => {
-        if (!loginFlag || !userInfo.userName) {
+        if (!loginFlag || !userInfo?.userName) {
             setLoginFlag(false)
             navigate('/login');
         }
     })
+    const jumpToReleventDiv = () => {
+        const queryString = window.location.search;
+        const urlParams = new URLSearchParams(queryString);
+        const goto = urlParams.get('goto')
+        /////////////----Scroll to an element----////////////
+        // const id = "saved-item-" + goto
+        // const yOffset = -60;
+        // const element = document.getElementById(id);
+        // const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
+        // window.scrollTo({ top: y, behavior: 'smooth' });
+        /////////////////////////////////////////////////////
+        if (goto && savedData[goto]) {
+            setCurrentFrame(new BigNumber(savedData[goto]?.frame))
+            setInputValue(new BigNumber(savedData[goto]?.frame))
+            setFps(new BigNumber(savedData[goto]?.frameFps))
+            setShutterFps(savedData[goto]?.shutterFps)
+            setFrequency(new BigNumber(savedData[goto]?.frequency))
+        }
+        // setComment(savedData[goto].comment)
+        if (savedData) setJumpFlag(false)
+    }
     useEffect(() => {
         var interval
         if (timerFlag) {
@@ -62,16 +86,17 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl, adm
         }
         else {
             clearInterval(interval);
-            axios.get(baseUrl + '/frame/all-frames')
+            axios.get(BASE_URL + '/frame/all-frames')
                 .then(res => {
                     setSavedData(res.data)
+                    if (jumpFlag) jumpToReleventDiv()
                 })
                 .catch((error) => { });
         }
         return () => {
             clearInterval(interval);
         };
-    }, [currentFrame, timerFlag, totalFrame, fps, shutterFps, frequency, savedData, baseUrl]);
+    }, [currentFrame, timerFlag, totalFrame, fps, shutterFps, frequency, savedData, BASE_URL]);
     useEffect(() => {
         var timer, tempCurrentFrame
         if (forwardFlag) {
@@ -110,7 +135,6 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl, adm
         else clearTimeout(timer)
         return () => clearTimeout(timer)
     })
-
     const squareClickedHadle = (sixteenNumber, tempIndex, currentCell) => {
         const chIndex = (unitNumber * unitNumber) - currentCell
         var newSixteenNumber = sixteenNumber;
@@ -121,25 +145,40 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl, adm
         setCurrentFrame(newCurrentFrame)
     }
     const digits_only = (string) => { return /^\d+$/.test(string) };
-    const onLogout = () => {
-        console.log('Logout made successfully');
-        // alert('Logout made successfully ✌');
-        setLoginFlag(false)
+    const exportAsImage = async (element, imageFileName, downloadFlag) => {
+        const canvas = await html2canvas(element);
+        const image = canvas.toDataURL("image/png", 1.0);
+        if(downloadFlag) downloadImage(image, imageFileName);
+        // console.log("image", image)
+        return image;
+    }; 
+    const downloadImage = (blob, fileName) => {
+        const fakeLink = window.document.createElement("a");
+        fakeLink.style = "display:none;";
+        fakeLink.download = fileName;
+        fakeLink.href = blob;
+        console.log("fakeLink", fakeLink.href)
+        document.body.appendChild(fakeLink);
+        fakeLink.click();
+        document.body.removeChild(fakeLink);
+
+        fakeLink.remove();
     };
     return (
-        <div className={drawFlag ? 'MainPage curser' : 'MainPage'} onMouseUp={() => { setMouseDownFlag(false); }}>
+        <div className={drawFlag ? 'MainPage curser' : 'MainPage'} onMouseUp={() => { setMouseDownFlag(false); }} ref={topRef}>
             <div className='header'>
-                <div className='user-name'>Hi, {userInfo.userName}</div>
+                <div className='user-name'>Hi, {userInfo?.userName}</div>
                 <p>THE GOD PROJECT</p>
                 <div className='button' onClick={() => {
                     setLoginFlag(false)
                     setUserInfo({})
                     navigate('/login')
-                }}><GoogleLogout
-                    clientId={clientId}
-                    buttonText="Logout"
-                    onLogoutSuccess={onLogout}
-                ></GoogleLogout></div>
+                }}>Log out
+                    {/* <GoogleLogout
+                        CLIENT_ID={CLIENT_ID}
+                        buttonText="Logout"
+                    ></GoogleLogout> */}
+                </div>
             </div>
             <div className={drawFlag ? 'button draw-mode' : 'button draw-mode disabled'} onClick={() => {
                 setDrawFlag(!drawFlag)
@@ -147,7 +186,10 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl, adm
             <div className={drawFlag ? 'button clear' : 'button clear disabled'} onClick={() => {
                 if (drawFlag) setCurrentFrame(totalFrame)
             }}>CLEAR</div>
-            <div className='squares' onMouseDown={() => { setMouseDownFlag(true); }}
+            <div className='button donate' onClick={() => {
+                window.open('https://www.paypal.com/donate/?hosted_button_id=MA5J22S8PQQ24')
+            }}>DONATE</div>
+            <div ref={exportRef} className='squares' onMouseDown={() => { setMouseDownFlag(true); }}
                 onMouseLeave={() => { setMouseDownFlag(false); }}
                 onMouseUp={() => { setMouseDownFlag(false); }}>
                 {
@@ -289,7 +331,6 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl, adm
             <div className='go-to-frame'>
                 <p>Go To Frame</p>
                 <textarea type={'text'} min={1} value={inputValue.toFixed()} onChange={(e) => {
-                    console.log(e.target.scrollHeight)
                     e.target.style.height = `${e.target.scrollHeight}px`;
                     if (digits_only(e.target.value)) setInputValue(new BigNumber(e.target.value))
                 }} />
@@ -390,23 +431,27 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl, adm
                         const frameObject = {
                             frame: currentFrame.toFixed(),
                             comment: comment,
-                            userId: userInfo._id,
-                            userName: userInfo.userName,
+                            userId: userInfo?._id,
+                            userName: userInfo?.userName,
                             frameFps: fps.toFixed(),
                             shutterFps: shutterFps,
-                            frequency: frequency.toFixed()
+                            frequency: frequency.toFixed(),
+                            imageUrl: exportAsImage(exportRef.current, "saving-image", false)
                         };
-                        console.log(frameObject)
-                        axios.post(baseUrl + '/frame/create-frame', frameObject)
+                        // downloadImage()
+                        axios.post(BASE_URL + '/frame/create-frame', frameObject)
                             .then(res => {
                                 if (res.data?.success) {
                                     setComment('')
+                                    bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+                                    ////////////////////////////////////////////////////////////////////
                                 }
                                 else {
                                     alert('Already existing pattern...')
                                 }
                             })
                             .catch((error) => { alert("There was an error...") });
+
                     }}>Save</div>
                 </div>
             </div>
@@ -416,7 +461,7 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl, adm
                     savedData?.map((savedItem, savedIndex) => {
                         const dispFrame = new BigNumber(savedItem?.frame).minus(1)
                         return (
-                            <div className='saved-item' key={"saved-item-" + savedIndex}>
+                            <div className='saved-item' key={"saved-item-" + savedIndex} id={"saved-item-" + savedIndex}>
                                 <div className='row'>
                                     <div className='squares'>
                                         {
@@ -453,54 +498,110 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, baseUrl, adm
                                             Frequency: {savedItem?.frequency}</p>
                                     </div>
                                 </div>
-                                <div className='row'>{savedItem?.commentDateTime} {savedItem?.userName}
-                                    <div className={(userInfo._id === savedItem.userId || adminFlag) ? 'button' : 'hidden'} onClick={() => {
-                                        if (comment === '') {
-                                            alert('Please leave a comment...')
-                                            return
-                                        }
-                                        const frameObject = {
-                                            frameId: savedItem._id,
-                                            frame: currentFrame.toFixed(),
-                                            comment: comment,
-                                            frameFps: fps.toFixed(),
-                                            shutterFps: shutterFps,
-                                            frequency: frequency.toFixed()
-                                        };
-                                        axios.post(baseUrl + '/frame/update-frame', frameObject)
-                                            .then(res => {
-                                                if (res.data?.success) {
-                                                    setComment('')
+                                <div className='row'>
+                                    <p> {savedItem?.commentDateTime} {savedItem?.userName} </p>
+                                    <div className='svg-icons'>
+                                        <div className='svg-icon-container'>
+                                            <PlayIcon className='svg-icon' onClick={() => {
+                                                setCurrentFrame(dispFrame.plus(1))
+                                                setInputValue(dispFrame.plus(1))
+                                                setFps(new BigNumber(savedItem?.frameFps))
+                                                setShutterFps(savedItem?.shutterFps)
+                                                setFrequency(new BigNumber(savedItem?.frequency))
+                                                setComment(savedItem.comment)
+                                                window.scrollTo({ top: 0, behavior: 'smooth' })
+                                            }} onMouseOver={() => {
+                                                const tempElement = document.getElementById('tryit-btn-' + savedIndex);
+                                                tempElement.className = 'hover-up'
+                                            }} onMouseLeave={() => {
+                                                const tempElement = document.getElementById('tryit-btn-' + savedIndex);
+                                                tempElement.className = 'hidden'
+                                            }} />
+                                            <div id={'tryit-btn-' + savedIndex} className='hidden'>Try it</div>
+                                        </div>
+                                        <div className='svg-icon-container'>
+                                            <RefreshIcon className={(userInfo?._id === savedItem.userId || adminFlag) ? 'svg-icon' : 'hidden'} onClick={() => {
+                                                if (comment === '') {
+                                                    alert('Please leave a comment...')
+                                                    return
                                                 }
-                                                else {
-                                                    alert('Already existing pattern...')
-                                                }
-                                            })
-                                            .catch((error) => { alert("There was an error...") });
-                                    }}>Update</div>
-                                    <div className='button' onClick={() => {
-                                        setCurrentFrame(dispFrame.plus(1))
-                                        setInputValue(dispFrame.plus(2))
-                                        setFps(new BigNumber(savedItem?.frameFps))
-                                        setShutterFps(savedItem?.shutterFps)
-                                        setFrequency(new BigNumber(savedItem?.frequency))
-                                        setComment(savedItem.comment)
-                                    }}>Try it</div>
-                                    <div className={(userInfo._id === savedItem.userId || adminFlag) ? 'button' : 'hidden'} onClick={() => {
-                                        axios.delete(baseUrl + '/frame/delete-frame/' + savedItem._id)
-                                            .then(res => {
-                                                if (res.data?.success) { }
-                                                else { alert("There was an error...") }
-                                            })
-                                            .catch((error) => { alert("There was an error...") });
-                                    }}>Delete</div>
+                                                const frameObject = {
+                                                    frameId: savedItem._id,
+                                                    frame: currentFrame.toFixed(),
+                                                    comment: comment,
+                                                    frameFps: fps.toFixed(),
+                                                    shutterFps: shutterFps,
+                                                    frequency: frequency.toFixed()
+                                                };
+                                                axios.post(BASE_URL + '/frame/update-frame', frameObject)
+                                                    .then(res => {
+                                                        if (res.data?.success) {
+                                                            setComment('')
+                                                        }
+                                                        else {
+                                                            alert('Already existing pattern...')
+                                                        }
+                                                    })
+                                                    .catch((error) => { alert("There was an error...") });
+                                            }} onMouseOver={() => {
+                                                const tempElement = document.getElementById('update-btn-' + savedIndex);
+                                                tempElement.className = 'hover-up'
+                                            }} onMouseLeave={() => {
+                                                const tempElement = document.getElementById('update-btn-' + savedIndex);
+                                                tempElement.className = 'hidden'
+                                            }} />
+                                            <div id={'update-btn-' + savedIndex} className='hidden'>Overwrite</div>
+                                        </div>
+                                        <div className='svg-icon-container'>
+                                            <TrashIcon className={(userInfo?._id === savedItem?.userId || adminFlag) ? 'svg-icon' : 'hidden'} onClick={() => {
+                                                axios.delete(BASE_URL + '/frame/delete-frame/' + savedItem._id)
+                                                    .then(res => {
+                                                        if (res.data?.success) { }
+                                                        else { alert("There was an error...") }
+                                                    })
+                                                    .catch((error) => { alert("There was an error...") });
+                                            }} onMouseOver={() => {
+                                                const tempElement = document.getElementById('delete-btn-' + savedIndex);
+                                                tempElement.className = 'hover-up'
+                                            }} onMouseLeave={() => {
+                                                const tempElement = document.getElementById('delete-btn-' + savedIndex);
+                                                tempElement.className = 'hidden'
+                                            }} />
+                                            <div id={'delete-btn-' + savedIndex} className='hidden'>Delete</div>
+                                        </div>
+                                        <div className='svg-icon-container'>
+                                            <FacebookIcon className='svg-icon' onClick={() => {
+                                                window.open(`https://www.facebook.com/sharer/sharer.php?u=https://the-god-project.com/main?goto=${savedIndex}`)
+                                            }} onMouseOver={() => {
+                                                const tempElement = document.getElementById('facebook-btn-' + savedIndex);
+                                                tempElement.className = 'hover-up'
+                                            }} onMouseLeave={() => {
+                                                const tempElement = document.getElementById('facebook-btn-' + savedIndex);
+                                                tempElement.className = 'hidden'
+                                            }} />
+                                            <div id={'facebook-btn-' + savedIndex} className='hidden'>Share to Facebook</div>
+                                        </div>
+                                        <div className='svg-icon-container'>
+                                            <LinkIcon className='svg-icon' onClick={() => {
+                                                navigator.clipboard.writeText(`https://the-god-project.com/main?goto=${savedIndex}`)
+                                                alert(`Link was copied to the clipboard: https://the-god-project.com/main?goto=${savedIndex}`)
+                                            }} onMouseOver={() => {
+                                                const tempElement = document.getElementById('link-btn-' + savedIndex);
+                                                tempElement.className = 'hover-up'
+                                            }} onMouseLeave={() => {
+                                                const tempElement = document.getElementById('link-btn-' + savedIndex);
+                                                tempElement.className = 'hidden'
+                                            }} />
+                                            <div id={'link-btn-' + savedIndex} className='hidden'>Copy Link</div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         )
                     })
                 }
             </div>
-
+            <div ref={bottomRef} style={{ height: "200px" }} />
         </div>
     )
 }
