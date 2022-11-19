@@ -17,6 +17,21 @@ import { ReactComponent as RefreshIcon } from "../assets/svgs/refresh.svg";
 // import { ReactComponent as ToggleLeftIcon } from "../assets/svgs/toggle-left.svg";
 // import { ReactComponent as ToggleRightIcon } from "../assets/svgs/toggle-right.svg";
 import html2canvas from "html2canvas";
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
+import Grid from '@mui/material/Grid'
+import Modal from '@mui/material/Modal';
+const style = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 400,
+    bgcolor: 'background.paper',
+    boxShadow: 24,
+    p: 4,
+};
 
 function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, adminFlag }) {
     const cellA = [1, 0, 0, 0, 1, 0, 0, 1, 0, 1, 1, 1, 0, 1, 1, 0]
@@ -45,6 +60,10 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, adminFlag })
     const bottomRef = useRef(null);
     const topRef = useRef(null);
     const exportRef = useRef();
+    const [overwriteModalFlag, setOverwriteModalFlag] = useState(false)
+    const [overwriteFrameObject, setOverwriteFrameObject] = useState({})
+    const [deleteModalFlag, setDeleteModalFlag] = useState(false)
+    const [deleteFrameId, setDeleteFrameId] = useState('')
 
     useEffect(() => {
         if (!loginFlag || !userInfo?.userName) {
@@ -148,16 +167,16 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, adminFlag })
     const exportAsImage = async (element, imageFileName, downloadFlag) => {
         const canvas = await html2canvas(element);
         const image = canvas.toDataURL("image/png", 1.0);
-        if(downloadFlag) downloadImage(image, imageFileName);
+        if (downloadFlag) downloadImage(image, imageFileName);
         // console.log("image", image)
         return image;
-    }; 
+    };
     const downloadImage = (blob, fileName) => {
         const fakeLink = window.document.createElement("a");
         fakeLink.style = "display:none;";
         fakeLink.download = fileName;
         fakeLink.href = blob;
-        console.log("fakeLink", fakeLink.href)
+
         document.body.appendChild(fakeLink);
         fakeLink.click();
         document.body.removeChild(fakeLink);
@@ -166,6 +185,58 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, adminFlag })
     };
     return (
         <div className={drawFlag ? 'MainPage curser' : 'MainPage'} onMouseUp={() => { setMouseDownFlag(false); }} ref={topRef}>
+            <Modal
+                open={overwriteModalFlag}
+                onClose={() => setOverwriteModalFlag(false)}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+            >
+                <Box sx={style}>
+                    <Typography id="modal-modal-title" variant="h6" component="h2">
+                        Are you sure to Overwrite the animation?
+                    </Typography>
+                    <Grid display="flex" justifyContent="flex-end" sx={{ pt: 2 }}>
+                        <Button variant="outlined" sx={{ mr: 2, pr: 4, pl: 4 }} onClick={() => {
+                            axios.post(BASE_URL + '/frame/update-frame', overwriteFrameObject)
+                                .then(res => {
+                                    if (res.data?.success) {
+                                        setComment('')
+                                    }
+                                    else {
+                                        alert('Already existing pattern...')
+                                    }
+                                })
+                                .catch((error) => { alert("There was an error...") });
+                            setOverwriteModalFlag(false)
+                        }}>Sure</Button>
+                        <Button variant="contained" sx={{ pr: 4, pl: 4 }} onClick={() => setOverwriteModalFlag(false)}>Cancel</Button>
+                    </Grid>
+                </Box>
+            </Modal>
+            <Modal
+                open={deleteModalFlag}
+                onClose={() => setDeleteModalFlag(false)}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+            >
+                <Box sx={style}>
+                    <Typography id="modal-modal-title" variant="h6" component="h2">
+                        Are you sure to Delete the animation?
+                    </Typography>
+                    <Grid display="flex" justifyContent="flex-end" sx={{ pt: 2 }}>
+                        <Button variant="outlined" sx={{ mr: 2, pr: 4, pl: 4 }} onClick={() => {
+                            axios.delete(BASE_URL + '/frame/delete-frame/' + deleteFrameId)
+                                .then(res => {
+                                    if (res.data?.success) { }
+                                    else { alert("There was an error...") }
+                                })
+                                .catch((error) => { alert("There was an error...") });
+                            setDeleteModalFlag(false)
+                        }}>Sure</Button>
+                        <Button variant="contained" sx={{ pr: 4, pl: 4 }} onClick={() => setDeleteModalFlag(false)}>Cancel</Button>
+                    </Grid>
+                </Box>
+            </Modal>
             <div className='header'>
                 <div className='user-name'>Hi, {userInfo?.userName}</div>
                 <p>THE GOD PROJECT</p>
@@ -436,7 +507,7 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, adminFlag })
                             frameFps: fps.toFixed(),
                             shutterFps: shutterFps,
                             frequency: frequency.toFixed(),
-                            imageUrl: exportAsImage(exportRef.current, "saving-image", false)
+                            // imageUrl: exportAsImage(exportRef.current, "saving-image", false)
                         };
                         // downloadImage()
                         axios.post(BASE_URL + '/frame/create-frame', frameObject)
@@ -463,7 +534,7 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, adminFlag })
                         return (
                             <div className='saved-item' key={"saved-item-" + savedIndex} id={"saved-item-" + savedIndex}>
                                 <div className='row'>
-                                    <div className='squares'>
+                                    <div className='squares' id={'saved-item-pattern-' + savedIndex}>
                                         {
                                             [...Array(unitNumber)].map((item, firstIndex) => {
                                                 return (
@@ -525,24 +596,15 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, adminFlag })
                                                     alert('Please leave a comment...')
                                                     return
                                                 }
-                                                const frameObject = {
+                                                setOverwriteModalFlag(true)
+                                                setOverwriteFrameObject({
                                                     frameId: savedItem._id,
                                                     frame: currentFrame.toFixed(),
                                                     comment: comment,
                                                     frameFps: fps.toFixed(),
                                                     shutterFps: shutterFps,
                                                     frequency: frequency.toFixed()
-                                                };
-                                                axios.post(BASE_URL + '/frame/update-frame', frameObject)
-                                                    .then(res => {
-                                                        if (res.data?.success) {
-                                                            setComment('')
-                                                        }
-                                                        else {
-                                                            alert('Already existing pattern...')
-                                                        }
-                                                    })
-                                                    .catch((error) => { alert("There was an error...") });
+                                                })
                                             }} onMouseOver={() => {
                                                 const tempElement = document.getElementById('update-btn-' + savedIndex);
                                                 tempElement.className = 'hover-up'
@@ -554,12 +616,8 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, adminFlag })
                                         </div>
                                         <div className='svg-icon-container'>
                                             <TrashIcon className={(userInfo?._id === savedItem?.userId || adminFlag) ? 'svg-icon' : 'hidden'} onClick={() => {
-                                                axios.delete(BASE_URL + '/frame/delete-frame/' + savedItem._id)
-                                                    .then(res => {
-                                                        if (res.data?.success) { }
-                                                        else { alert("There was an error...") }
-                                                    })
-                                                    .catch((error) => { alert("There was an error...") });
+                                                setDeleteModalFlag(true)
+                                                setDeleteFrameId(savedItem._id)
                                             }} onMouseOver={() => {
                                                 const tempElement = document.getElementById('delete-btn-' + savedIndex);
                                                 tempElement.className = 'hover-up'
@@ -570,8 +628,11 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, adminFlag })
                                             <div id={'delete-btn-' + savedIndex} className='hidden'>Delete</div>
                                         </div>
                                         <div className='svg-icon-container'>
-                                            <FacebookIcon className='svg-icon' onClick={() => {
-                                                window.open(`https://www.facebook.com/sharer/sharer.php?u=https://the-god-project.com/main?goto=${savedIndex}`)
+                                            <FacebookIcon className='svg-icon' onClick={async() => {
+                                                // exportAsImage(document.getElementById('saved-item-pattern-' + savedIndex), "saving-image", true)
+                                                // window.open(`https://www.facebook.com/sharer/sharer.php?u=https://the-god-project.com/main?goto=${savedIndex}`)
+                                                const imageUrl = await exportAsImage(document.getElementById('saved-item-pattern-' + savedIndex), "saving-image", false)
+                                                window.open(`https://www.facebook.com/sharer/sharer.php?u=https://the-god-project.com/main?goto=${savedIndex}&picture=${imageUrl}&title=${'The God Project Pattern Animation'}`)
                                             }} onMouseOver={() => {
                                                 const tempElement = document.getElementById('facebook-btn-' + savedIndex);
                                                 tempElement.className = 'hover-up'
@@ -583,6 +644,7 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, adminFlag })
                                         </div>
                                         <div className='svg-icon-container'>
                                             <LinkIcon className='svg-icon' onClick={() => {
+                                                exportAsImage(document.getElementById('saved-item-pattern-' + savedIndex), "saving-image", true)
                                                 navigator.clipboard.writeText(`https://the-god-project.com/main?goto=${savedIndex}`)
                                                 alert(`Link was copied to the clipboard: https://the-god-project.com/main?goto=${savedIndex}`)
                                             }} onMouseOver={() => {
