@@ -267,6 +267,9 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, adminFlag })
                 <div className='button donate' onClick={() => {
                     window.open('https://www.paypal.com/donate/?hosted_button_id=MA5J22S8PQQ24')
                 }}>DONATE</div>
+                <UpIcon className='button-gotoUp' onClick={()=>{
+                    window.scrollTo({ top: 0, behavior: 'smooth' })
+                }}/>
                 <div ref={exportRef} className='squares' onMouseDown={() => { setMouseDownFlag(true); }}
                     onMouseLeave={() => { setMouseDownFlag(false); }}
                     onMouseUp={() => { setMouseDownFlag(false); }}>

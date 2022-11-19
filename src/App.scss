@@ -365,6 +365,7 @@
                         margin: 0px 10px 0px 10px;
                         min-height: 84px;
                         font-size: 20px;
+                        font-family: 'Raleway-Regular';
                         width: 100vw;
                         max-width: 310px;
                         padding: 5px 10px 5px 10px;
@@ -654,6 +655,27 @@
             &:hover {
                 background-color: #ffc43ac0;
             }
+        }
+    }
+
+    .button-gotoUp {
+        position: fixed;
+        right: 30px;
+        bottom: 30px;
+        margin: 0px;
+        padding: 10px;
+        font-size: 30px;
+        width: 40px;
+        height: 40px;
+        background-color: rgb(68, 114, 196);;
+        // border: 1px solid rgba(0, 0, 0, 0.738);
+        color: white;
+        border-radius: 100px;
+        cursor: pointer;
+        opacity: 0.5;
+        
+        &:hover {
+            opacity: 1;
         }
     }
 
