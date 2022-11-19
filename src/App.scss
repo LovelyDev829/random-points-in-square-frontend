@@ -2,7 +2,8 @@
     font-family: RubikGlitch-Regular;
     src: url("./assets/fonts/RubikGlitch-Regular.ttf");
 }
-@font-face{
+
+@font-face {
     font-family: Raleway-Regular;
     src: url("./assets/fonts/Raleway-Regular.ttf");
 }
@@ -23,8 +24,8 @@
         background: rgba(0, 0, 0, 0.478)
             /* url("https://media.giphy.com/media/8agqybiK5LW8qrG3vJ/giphy.gif") center no-repeat; */
             url("https://media.tenor.com/On7kvXhzml4AAAAi/loading-gif.gif") center no-repeat;
-            /* url("https://media.tenor.com/vp3V50Hs-B8AAAAi/loading-waiting.gif") center no-repeat; */
-            
+        /* url("https://media.tenor.com/vp3V50Hs-B8AAAAi/loading-waiting.gif") center no-repeat; */
+
         background-size: 10vh 10vh;
         z-index: 1;
     }
@@ -579,7 +580,8 @@
                                 // background-color: aquamarine;
                                 padding: 7px;
                                 cursor: pointer;
-                                &:hover{
+
+                                &:hover {
                                     color: white;
                                     background-color: rgb(27, 89, 195);
                                 }
@@ -628,6 +630,7 @@
 
         &.disabled {
             background-color: rgb(100, 119, 153);
+            cursor: default;
         }
 
         &.draw-mode {
@@ -636,17 +639,11 @@
             left: calc(50vw - 417px);
         }
 
-        &.clear {
-            position: absolute;
-            top: 185px;
-            left: calc(50vw - 417px);
-        }
-
         &.donate {
             position: absolute;
-            top: 125px;
-            height: 80px;
-            line-height: 70px;
+            top: 110px;
+            height: 50px;
+            line-height: 50px;
             right: calc(50vw - 417px);
             background-color: #ffc43a;
             color: #121661;
@@ -654,6 +651,19 @@
 
             &:hover {
                 background-color: #ffc43ac0;
+            }
+        }
+
+        &.download {
+            position: absolute;
+            top: 200px;
+            color: white;
+            right: calc(50vw - 417px);
+            background-color: rgb(68, 114, 196);
+            align-items: center;
+
+            &:hover {
+                background-color: rgb(27, 89, 195);
             }
         }
     }
@@ -667,16 +677,46 @@
         font-size: 30px;
         width: 40px;
         height: 40px;
-        background-color: rgb(68, 114, 196);;
+        background-color: rgb(68, 114, 196);
+        ;
         // border: 1px solid rgba(0, 0, 0, 0.738);
         color: white;
         border-radius: 100px;
         cursor: pointer;
         opacity: 0.5;
-        
+
         &:hover {
             opacity: 1;
         }
+    }
+
+    .draw-mode-toggle {
+        position: absolute;
+        top: 105px;
+        left: calc(50vw - 417px);
+        p{
+            margin: 0px;
+        }
+        .flex{
+            margin: auto;
+            text-align: center;
+            display: inline-flex;
+            align-items: center;
+            padding-bottom: 30px;
+            svg{
+                width: 40px;
+                height: 40px;
+                cursor: pointer;
+            }
+            p{
+                margin: 0px 5px 0px 5px;
+                font-weight: 800;
+            }
+        }
+    }
+
+    .blue {
+        color: rgb(68, 114, 196);
     }
 
     .hidden {

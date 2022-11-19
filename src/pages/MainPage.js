@@ -14,8 +14,8 @@ import { ReactComponent as LinkIcon } from "../assets/svgs/link.svg";
 import { ReactComponent as FacebookIcon } from "../assets/svgs/facebook.svg";
 import { ReactComponent as TrashIcon } from "../assets/svgs/trash.svg";
 import { ReactComponent as RefreshIcon } from "../assets/svgs/refresh.svg";
-// import { ReactComponent as ToggleLeftIcon } from "../assets/svgs/toggle-left.svg";
-// import { ReactComponent as ToggleRightIcon } from "../assets/svgs/toggle-right.svg";
+import { ReactComponent as ToggleLeftIcon } from "../assets/svgs/toggle-left.svg";
+import { ReactComponent as ToggleRightIcon } from "../assets/svgs/toggle-right.svg";
 import html2canvas from "html2canvas";
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -209,7 +209,7 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, adminFlag })
                                     }
                                 })
                                 .catch((error) => { alert("There was an error...") })
-                                .finally(()=>{setLoadingFlag(false)});
+                                .finally(() => { setLoadingFlag(false) });
                             setOverwriteModalFlag(false)
                         }}>SURE</Button>
                         <Button variant="contained" sx={{ pr: 4, pl: 4 }} onClick={() => setOverwriteModalFlag(false)}>CANCEL</Button>
@@ -235,7 +235,7 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, adminFlag })
                                     else { alert("There was an error...") }
                                 })
                                 .catch((error) => { alert("There was an error...") })
-                                .finally(()=>{setLoadingFlag(false)});
+                                .finally(() => { setLoadingFlag(false) });
                             setDeleteModalFlag(false)
                         }}>SURE</Button>
                         <Button variant="contained" sx={{ pr: 4, pl: 4 }} onClick={() => setDeleteModalFlag(false)}>CANCEL</Button>
@@ -258,18 +258,33 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, adminFlag })
             </div>
             <div className={loadingFlag ? 'loading-container' : 'hidden'}></div>
             <div>
-                <div className={drawFlag ? 'button draw-mode' : 'button draw-mode disabled'} onClick={() => {
-                    setDrawFlag(!drawFlag)
-                }}>DRAW MODE</div>
-                <div className={drawFlag ? 'button clear' : 'button clear disabled'} onClick={() => {
-                    if (drawFlag) setCurrentFrame(totalFrame)
-                }}>CLEAR</div>
+                <div className='draw-mode-toggle'>
+                    <p>DRAW MODE</p>
+                    <div className='flex'>
+                        <p className='blue'>ON</p>
+                        {
+                            drawFlag ?
+                                <ToggleLeftIcon className='blue' onClick={() => setDrawFlag(false)} />
+                                : <ToggleRightIcon onClick={() => setDrawFlag(true)} />
+                        }
+                        <p>OFF</p>
+                    </div>
+                    <div className={drawFlag ? 'button clear' : 'button clear disabled'} onClick={() => {
+                        if (drawFlag) setCurrentFrame(totalFrame)
+                    }}>CLEAR</div>
+                </div>
                 <div className='button donate' onClick={() => {
                     window.open('https://www.paypal.com/donate/?hosted_button_id=MA5J22S8PQQ24')
                 }}>DONATE</div>
-                <UpIcon className='button-gotoUp' onClick={()=>{
+                <div className='button download' onClick={async () => {
+                    setLoadingFlag(true);
+                    await exportAsImage(exportRef.current, "The_God_Project_Pattern", true)
+                    
+                        .finally(() => setLoadingFlag(false))
+                }}>DOWNLOAD</div>
+                <UpIcon className='button-gotoUp' onClick={() => {
                     window.scrollTo({ top: 0, behavior: 'smooth' })
-                }}/>
+                }} />
                 <div ref={exportRef} className='squares' onMouseDown={() => { setMouseDownFlag(true); }}
                     onMouseLeave={() => { setMouseDownFlag(false); }}
                     onMouseUp={() => { setMouseDownFlag(false); }}>
@@ -642,13 +657,13 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, adminFlag })
                                                 <FacebookIcon className='svg-icon' onClick={async () => {
                                                     setLoadingFlag(true)
                                                     const imageUrl = await exportAsImage(document.getElementById('saved-item-pattern-' + savedIndex), "saving-image", false)
-                                                    .then(()=>{
-                                                        window.open(`https://www.facebook.com/sharer/sharer.php?u=https://the-god-project.com/main?goto=${savedIndex}&picture=${imageUrl}&title=${'The God Project Pattern Animation'}`)
-                                                    })
-                                                    .catch(()=>{
-                                                        window.open(`https://www.facebook.com/sharer/sharer.php?u=https://the-god-project.com/main?goto=${savedIndex}&title=${'The God Project Pattern Animation'}`)
-                                                    })
-                                                    .finally(()=>setLoadingFlag(false))
+                                                        .then(() => {
+                                                            window.open(`https://www.facebook.com/sharer/sharer.php?u=https://the-god-project.com/main?goto=${savedIndex}&picture=${imageUrl}&title=${'The God Project Pattern Animation'}`)
+                                                        })
+                                                        .catch(() => {
+                                                            window.open(`https://www.facebook.com/sharer/sharer.php?u=https://the-god-project.com/main?goto=${savedIndex}&title=${'The God Project Pattern Animation'}`)
+                                                        })
+                                                        .finally(() => setLoadingFlag(false))
                                                 }} onMouseOver={() => {
                                                     const tempElement = document.getElementById('facebook-btn-' + savedIndex);
                                                     tempElement.className = 'hover-up'
@@ -660,7 +675,6 @@ function MainPage({ loginFlag, setLoginFlag, userInfo, setUserInfo, adminFlag })
                                             </div>
                                             <div className='svg-icon-container'>
                                                 <LinkIcon className='svg-icon' onClick={() => {
-                                                    exportAsImage(document.getElementById('saved-item-pattern-' + savedIndex), "saving-image", true)
                                                     navigator.clipboard.writeText(`https://the-god-project.com/main?goto=${savedIndex}`)
                                                     alert(`Link was copied to the clipboard: https://the-god-project.com/main?goto=${savedIndex}`)
                                                 }} onMouseOver={() => {
